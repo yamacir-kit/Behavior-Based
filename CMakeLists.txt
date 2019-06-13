@@ -15,8 +15,8 @@ execute_process(
 
 math(EXPR SUBMINOR "${COMMITS} - ${MAJOR_OFFSET} - ${MINOR_OFFSET}")
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
 endif()
 
 execute_process(
@@ -40,7 +40,6 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -O2 -s -DBOOST_UBLAS_NDEBUG")
 set(CMAKE_CXX_STANDARD 14)
 
 set(${PROJECT_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(${PROJECT_NAME}_CONFIGURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/configure)
 
 execute_process(
   COMMAND grep -e "<depend>" ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
@@ -85,36 +84,33 @@ endif()
 if(EXISTS ${${PROJECT_NAME}_INCLUDE_DIR})
   catkin_package(
     INCLUDE_DIRS   ${${PROJECT_NAME}_INCLUDE_DIR}
-    CATKIN_DEPENDS ${${PROJECT_NAME}_PACKAGE_DEPENDS}
-  )
+    CATKIN_DEPENDS ${${PROJECT_NAME}_PACKAGE_DEPENDS})
 endif()
 
 string(TIMESTAMP ${PROJECT_NAME}_TIMESTAMP "%Y/%m/%d %H:%M:%S")
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake)
   file(MAKE_DIRECTORY ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure)
   configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp
-    ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure/configure.hpp
-  )
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake
+    ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure.hpp)
 endif()
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md.cmake)
   configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md
-    ${CMAKE_CURRENT_SOURCE_DIR}/README.md
-  )
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
 endif()
 
 include_directories(
   ${${PROJECT_NAME}_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
-)
+  )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-)
+  )
 
 file(GLOB ${PROJECT_NAME}_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 if(${PROJECT_NAME}_SOURCES)
