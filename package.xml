@@ -2,7 +2,7 @@
 
 <package format="2">
   <name>behavior_based</name>
-  <version>0.0.12</version>
+  <version>0.0.14</version>
 
   <description>
     Behavior-based robotics libraries for ROS.
