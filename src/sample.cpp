@@ -3,6 +3,8 @@
 #include <ros/ros.h>
 #include <geometry_msgs/TwistStamped.h>
 
+#define EIGEN_NO_DEBUG
+
 #include <behavior_based/configure.hpp>
 #include <behavior_based/expression/dispatch.hpp>
 
