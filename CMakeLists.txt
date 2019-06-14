@@ -16,22 +16,22 @@ execute_process(
 math(EXPR SUBMINOR "${COMMITS} - ${MAJOR_OFFSET} - ${MINOR_OFFSET}")
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
 endif()
 
 execute_process(
   COMMAND grep -e "<name>" ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
   COMMAND sed -E "s/(.*)<(.*)>(.*)<\\/\\2>/\\3/g"
   COMMAND tr -d "\n"
-  OUTPUT_VARIABLE PACKAGE_NAME
-  )
+  OUTPUT_VARIABLE PACKAGE_NAME)
 
 execute_process(
   COMMAND grep -e "<version>" ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
   COMMAND sed -E "s/(.*)<(.*)>(.*)<\\/\\2>/\\3/g"
   COMMAND tr -d "\n"
-  OUTPUT_VARIABLE PACKAGE_VERSION
-  )
+  OUTPUT_VARIABLE PACKAGE_VERSION)
 
 project(${PACKAGE_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES CXX)
 
@@ -45,8 +45,7 @@ execute_process(
   COMMAND grep -e "<depend>" ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
   COMMAND sed -E "s/(.*)<(.*)>(.*)<\\/\\2>/\\3;/g"
   COMMAND tr -d "\n"
-  OUTPUT_VARIABLE ${PROJECT_NAME}_PACKAGE_DEPENDS
-  )
+  OUTPUT_VARIABLE ${PROJECT_NAME}_PACKAGE_DEPENDS)
 
 find_package(Boost  REQUIRED COMPONENTS)
 find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_PACKAGE_DEPENDS})
@@ -90,7 +89,7 @@ endif()
 string(TIMESTAMP ${PROJECT_NAME}_TIMESTAMP "%Y/%m/%d %H:%M:%S")
 
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake)
-  file(MAKE_DIRECTORY ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure)
+  # file(MAKE_DIRECTORY ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure)
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake
     ${${PROJECT_NAME}_INCLUDE_DIR}/${PROJECT_NAME}/configure.hpp)
