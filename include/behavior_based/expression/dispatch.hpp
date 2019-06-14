@@ -23,7 +23,7 @@ namespace NAMESPACE { namespace expression
   };
 
   template <typename F1, typename F2, typename... Fs>
-  struct dispatcher<F1, F2, Ts...>
+  struct dispatcher<F1, F2, Fs...>
     : public F1
     , public dispatcher<F2, Fs...>
   {
@@ -42,7 +42,7 @@ namespace NAMESPACE { namespace expression
   {
     return {std::forward<Fs>(fs)...};
   }
-}} namespace NAMESPACE::expression
+}} // namespace NAMESPACE::expression
 
 #endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_DISPATCH_HPP
 
