@@ -15,13 +15,15 @@ namespace NAMESPACE { namespace expression
     : public std::false_type
   {};
 
+  using unit = list<>;
+
   template <typename E>
   struct list<E>
     : public E
-    , public list<>
+    , public unit
   {
     using car = E;
-    using cdr = list<>;
+    using cdr = unit;
 
     constexpr list() = default;
 
@@ -47,8 +49,6 @@ namespace NAMESPACE { namespace expression
       , cdr {std::forward<Ts>(xs)...}
     {}
   };
-
-  constexpr list<> unit {};
 
   #define SELECTOR(NAME) \
   template <typename List> \
