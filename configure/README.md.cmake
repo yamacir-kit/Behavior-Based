@@ -1,4 +1,4 @@
-# ${PROJECT_NAME} ${PROJECT_VERSION}
+# Behavior-Based Library ${PROJECT_VERSION}
 
 The Behavior-Based Robotics libraries for ROS mobile robots.
 
