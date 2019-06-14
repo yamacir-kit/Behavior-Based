@@ -8,66 +8,64 @@
 namespace NAMESPACE { namespace expression
 {
   template <typename...>
-  struct cons;
+  struct list;
 
   template <>
-  struct cons<>
+  struct list<>
     : public std::false_type
   {};
 
   template <typename E>
-  struct cons<E>
+  struct list<E>
     : public E
-    , public cons<>
+    , public list<>
   {
     using car = E;
-    using cdr = cons<>;
+    using cdr = list<>;
 
-    constexpr cons() = default;
+    constexpr list() = default;
 
     template <typename... Ts>
-    constexpr cons(Ts&&... xs)
+    constexpr list(Ts&&... xs)
       : car {std::forward<Ts>(xs)...}
     {}
   };
 
   template <typename E1, typename E2, typename... Es>
-  struct cons<E1, E2, Es...>
+  struct list<E1, E2, Es...>
     : public E1
-    , public cons<E2, Es...>
+    , public list<E2, Es...>
   {
     using car = E1;
-    using cdr = cons<E1, Es...>;
+    using cdr = list<E1, Es...>;
 
-    constexpr cons() = default;
+    constexpr list() = default;
 
     template <typename T, typename... Ts>
-    constexpr cons(T&& x, Ts&&... xs)
+    constexpr list(T&& x, Ts&&... xs)
       : car {std::forward<T>(x)}
       , cdr {std::forward<Ts>(xs)...}
     {}
   };
 
-  constexpr cons<> unit {};
+  constexpr list<> unit {};
 
-  template <typename T>
-  constexpr decltype(auto) car(const T& x) noexcept
-  {
-    return static_cast<const typename T::car&>(x);
+  #define SELECTOR(NAME) \
+  template <typename List> \
+  constexpr decltype(auto) NAME(const List& list) noexcept \
+  { \
+    return static_cast<const typename List::NAME&>(list); \
   }
 
-  template <typename T>
-  constexpr decltype(auto) cdr(const T& x) noexcept
-  {
-    return static_cast<const typename T::cdr&>(x);
-  }
+  SELECTOR(car)
+  SELECTOR(cdr)
 
-  template <typename... Ts>
-  constexpr auto list(Ts&&... xs)
-    -> cons<typename std::decay<Ts>::type...>
-  {
-    return {std::forward<Ts>(xs)...};
-  }
+  // template <typename... Ts>
+  // constexpr auto list(Ts&&... xs)
+  //   -> list<typename std::decay<Ts>::type...>
+  // {
+  //   return {std::forward<Ts>(xs)...};
+  // }
 }} // namespace NAMESPACE::expression
 
 #endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_LIST_HPP
