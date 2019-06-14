@@ -15,7 +15,7 @@ namespace NAMESPACE { namespace semantics
   template <typename Velocity>
   struct velocity_traits
   {
-    using value_type = typename Velocity::value_type;
+    using output_type = typename Velocity::output_type;
 
     constexpr max = 10.0; // [m/s]
   };
@@ -25,15 +25,11 @@ namespace NAMESPACE { namespace semantics
 
   // 意味が抽出できない場合の返り値の規定
   template <>
-  struct velocity<>
-    : public facade<velocity<unit>>
+  struct velocity<unit>
+    : public facade<velocity, unit>
     , public unit // 環境のキャスト保証のため
   {
-    using value_type = Eigen::Vector2d;
-
-    using message_type = unit;
-
-    static inline const auto default_value {value_type::Zero()};
+    static inline const auto default_value {output_type::Zero()};
 
     template <typename... Ts>
     constexpr velocity(Ts&&... xs)
@@ -50,20 +46,17 @@ namespace NAMESPACE { namespace semantics
   #define VELOCITY_SRMANTICS_FOR(TYPE, ...)                                    \
   template <>                                                                  \
   struct velocity<TYPE>                                                        \
-    : public facade<velocity<TYPE>>                                            \
+    : public facade<velocity, TYPE>                                            \
     , public TYPE                                                              \
   {                                                                            \
-    using message_type = TYPE::ConstPtr;                                       \
-    using value_type = Eigen::Vector2d;                                        \
-                                                                               \
     template <typename... Ts>                                                  \
     constexpr velocity(Ts&&... xs)                                             \
       : TYPE {std::forward<Ts>(xs)...}                                         \
     {}                                                                         \
                                                                                \
-    value_type operator()(const message_type& message) const                   \
+    output_type operator()(const message_type& message) const                  \
     {                                                                          \
-      if (message) __VA_ARGS__ else return velocity<>::default_value;          \
+      if (message) __VA_ARGS__ else return velocity<unit>::default_value;      \
     }                                                                          \
   };
 
@@ -71,7 +64,7 @@ namespace NAMESPACE { namespace semantics
   {
     const auto& twist {(*message).twist.twist};
 
-    const value_type value {
+    const output_type value {
       std::cos(twist.angular.z),
       std::sin(twist.angular.z)
     };

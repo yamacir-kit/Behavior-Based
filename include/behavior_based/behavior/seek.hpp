@@ -14,7 +14,7 @@ namespace NAMESPACE { namespace behavior
 
     template <typename Environment>
     auto operator()(Environment&& environment) const
-      -> typename semantics::velocity_traits<Velocity>::value_type
+      -> typename semantics::velocity_traits<Velocity>::output_type
     {
       using namespace semantics;
 
