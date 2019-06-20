@@ -8,7 +8,8 @@
 #include <nav_msgs/Odometry.h>
 
 #include <behavior_based/configure.hpp>
-#include <behavior_base/expression/list.hpp>
+#include <behavior_based/expression/list.hpp>
+#include <behavior_based/semantics/facade.hpp>
 
 namespace NAMESPACE { namespace semantics
 {
@@ -29,7 +30,7 @@ namespace NAMESPACE { namespace semantics
     : public facade<velocity, unit>
     , public unit // 環境のキャスト保証のため
   {
-    static inline const auto default_value {output_type::Zero()};
+    static inline const auto default_output {output_type::Zero()};
 
     template <typename... Ts>
     constexpr velocity(Ts&&... xs)
@@ -39,7 +40,7 @@ namespace NAMESPACE { namespace semantics
     template <typename... Ts>
     constexpr decltype(auto) operator()(Ts&&...) const noexcept
     {
-      return default_value;
+      return default_output;
     }
   };
 
@@ -56,7 +57,7 @@ namespace NAMESPACE { namespace semantics
                                                                                \
     output_type operator()(const message_type& message) const                  \
     {                                                                          \
-      if (message) __VA_ARGS__ else return velocity<unit>::default_value;      \
+      if (message) __VA_ARGS__ else return velocity<unit>::default_output;     \
     }                                                                          \
   };
 
