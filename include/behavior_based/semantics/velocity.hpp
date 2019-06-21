@@ -6,6 +6,8 @@
 #include <Eigen/Core>
 
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TwistStamped.h>
 
 #include <behavior_based/configure.hpp>
 #include <behavior_based/expression/list.hpp>
@@ -14,6 +16,8 @@
 
 namespace NAMESPACE { namespace semantics
 {
+  DEFINE_SEMANTICS_CATEGORY(velocity, output_type::Zero());
+
   template <typename Velocity>
   struct velocity_traits
   {
@@ -22,19 +26,29 @@ namespace NAMESPACE { namespace semantics
     constexpr max = 10.0; // [m/s]
   };
 
-  DEFINE_SEMANTICS_CATEGORY(velocity, output_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::Twist,
+  {
+    return output_type {
+      std::cos(message->angular.z),
+      std::sin(message->angular.z)
+    } * message->linear.x;
+  });
+
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::TwistStamped,
+  {
+    return output_type {
+      std::cos(message->twist.angular.z),
+      std::sin(message->twist.angular.z)
+    } * message->twist.linear.x;
+  });
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, nav_msgs::Odometry,
   {
-    const auto& twist {(*message).twist.twist};
-
-    const output_type value {
-      std::cos(twist.angular.z),
-      std::sin(twist.angular.z)
-    };
-
-    return value * twist.linear.x;
-  })
+    return output_type {
+      std::cos(message->twist.twist.angular.z),
+      std::sin(message->twist.twist.angular.z)
+    } * message->twist.twist.linear.x;
+  });
 }} // namespace NAMESPACE::semantics
 
 #endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_VELOCITY_HPP

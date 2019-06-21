@@ -11,7 +11,7 @@ namespace NAMESPACE { namespace semantics
   struct facade
   {
     // 十中八九こいつになるのでもうファサードに埋め込んでおく。
-    // 当てはまらない奴はテンプレートパラメータ Semantics を特殊化して対応すること。
+    // 当てはまらない奴はテンプレートパラメータ Category を特殊化して対応すること。
     using output_type = Eigen::Vector2d;
 
     using category = Category;
