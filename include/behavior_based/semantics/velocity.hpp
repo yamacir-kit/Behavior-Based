@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include <boost/math/constants/constants.hpp>
+
 #include <Eigen/Core>
 
 #include <nav_msgs/Odometry.h>
@@ -23,31 +25,34 @@ namespace NAMESPACE { namespace semantics
   {
     using output_type = typename Velocity::output_type;
 
-    constexpr max = 10.0; // [m/s]
+    static constexpr auto linear_max = 10.0; // [m/s]
+    static constexpr auto angular_max = boost::math::constants::pi<double>(); // [rad/s]
   };
+
+  // TODO Eigen が賢いコンストラクタを持ってるのでそれを使うように修正すること
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::Twist,
   {
     return output_type {
-      std::cos(message->angular.z),
-      std::sin(message->angular.z)
-    } * message->linear.x;
+      std::cos((*this)->angular.z),
+      std::sin((*this)->angular.z)
+    } * (*this)->linear.x;
   });
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::TwistStamped,
   {
     return output_type {
-      std::cos(message->twist.angular.z),
-      std::sin(message->twist.angular.z)
-    } * message->twist.linear.x;
+      std::cos((*this)->twist.angular.z),
+      std::sin((*this)->twist.angular.z)
+    } * (*this)->twist.linear.x;
   });
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, nav_msgs::Odometry,
   {
     return output_type {
-      std::cos(message->twist.twist.angular.z),
-      std::sin(message->twist.twist.angular.z)
-    } * message->twist.twist.linear.x;
+      std::cos((*this)->twist.twist.angular.z),
+      std::sin((*this)->twist.twist.angular.z)
+    } * (*this)->twist.twist.linear.x;
   });
 }} // namespace NAMESPACE::semantics
 

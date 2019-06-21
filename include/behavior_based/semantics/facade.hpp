@@ -14,7 +14,7 @@ namespace NAMESPACE { namespace semantics
     // 当てはまらない奴はテンプレートパラメータ Category を特殊化して対応すること。
     using output_type = Eigen::Vector2d;
 
-    using category = Category;
+    // using category = Category;
 
     using message_type = Message;
 

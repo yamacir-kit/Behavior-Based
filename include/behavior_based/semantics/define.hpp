@@ -6,27 +6,26 @@
 #include <behavior_based/expression/list.hpp>
 #include <behavior_based/semantics/facade.hpp>
 
+// 関数呼び出し演算子になってるのはAPI変更のための一時的な仕様なので勘弁
+
 #define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_OUTPUT)               \
                                                                                \
 template <typename...>                                                         \
 struct CATEGORY_NAME;                                                          \
                                                                                \
 template <>                                                                    \
-struct CATEGORY_NAME<unit>                                                     \
-  : public facade<CATEGORY_NAME, unit>                                         \
-  , public unit                                                                \
+struct CATEGORY_NAME<expression::unit>                                         \
+  : public facade<CATEGORY_NAME, expression::unit>                             \
+  , public expression::unit                                                    \
 {                                                                              \
-  static inline const auto default_output {DEFAULT_OUTPUT};                    \
-                                                                               \
   template <typename... Ts>                                                    \
   constexpr CATEGORY_NAME(Ts&&... xs)                                          \
-    : unit {std::forward}                                                      \
+    : expression::unit {std::forward<Ts>(xs)...}                               \
   {}                                                                           \
                                                                                \
-  template <typename... Ts>                                                    \
-  constexpr decltype(auto) operator()(Ts&&...) const noexcept                  \
+  decltype(auto) operator()() const noexcept                                   \
   {                                                                            \
-    return default_output;                                                     \
+    return DEFAULT_OUTPUT;                                                     \
   }                                                                            \
 }
 
@@ -35,16 +34,16 @@ struct CATEGORY_NAME<unit>                                                     \
 template <>                                                                    \
 struct CATEGORY<TYPE>                                                          \
   : public facade<CATEGORY, TYPE>                                              \
-  , public TYPE                                                                \
+  , public TYPE::ConstPtr                                                      \
 {                                                                              \
   template <typename... Ts>                                                    \
   constexpr CATEGORY(Ts&&... xs)                                               \
-    : TYPE {std::forward<Ts>(xs)...}                                           \
+    : TYPE::ConstPtr {std::forward<Ts>(xs)...}                                 \
   {}                                                                           \
                                                                                \
-  output_type operator()(const message_type& message) const                    \
+  output_type operator()() const                                               \
   {                                                                            \
-    if (message) __VA_ARGS__ else return velocity<unit>::default_output;       \
+    if (*this) __VA_ARGS__ else return velocity<expression::unit> {}();        \
   }                                                                            \
 };
 
