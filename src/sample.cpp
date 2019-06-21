@@ -6,6 +6,7 @@
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Joy.h>
 
+#include <behavior_based/actuator/vehicle.hpp>
 #include <behavior_based/behavior/seek.hpp>
 #include <behavior_based/configure.hpp>
 #include <behavior_based/expression/dispatch.hpp>
@@ -23,8 +24,8 @@ int main(int argc, char** argv)
 
   using environment
     = expression::list<
-        nav_msgs::Odometry::ConstPtr,
-        sensor_msgs::Joy::ConstPtr
+        nav_msgs::Odometry::ConstPtr
+      , sensor_msgs::Joy::ConstPtr
       >;
 
   environment interaction_environment {};
@@ -49,17 +50,19 @@ int main(int argc, char** argv)
    * MIMOを想定したAPIだからディスパッチャになってるけど、今回はMISOなのでひとつだけ。
    */
   auto output {expression::dispatch(
-    [&](const geometry_msgs::TwistStamped& data)
+    [&](const geometry_msgs::Twist& data)
     {
       static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
-      return p.publish(data);
+      geometry_msgs::TwistStamped twist {};
+      twist.header.stamp = ros::Time::now();
+      twist.twist = data;
+      return p.publish(twist);
     }
   )};
 
-  // auto evaluate = [&](auto&& v)
-  // {
-  //   return geometry::angle
-  // };
+  constexpr actuator::vehicle<
+    semantics::velocity<nav_msgs::Odometry>
+  > actuate {};
 
   #define CALLBACK(TYPENAME, ...)                                              \
   std::function<void (const TYPENAME::ConstPtr&)>                              \
@@ -75,11 +78,14 @@ int main(int argc, char** argv)
       static_cast<TYPENAME::ConstPtr&>(interaction_environment) = message;     \
                                                                                \
       const auto reaction {behaviors(interaction_environment)};                \
+                                                                               \
+      return output(actuate(reaction, interaction_environment));               \
     })                                                                         \
   )
 
   std::vector<ros::Subscriber> sensory {
     CONNECT(nav_msgs::Odometry, "/odom")
+  , CONNECT(sensor_msgs::Joy,   "/joy")
   };
 
   ros::spin();
