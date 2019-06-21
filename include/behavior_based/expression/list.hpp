@@ -5,6 +5,8 @@
 
 #include <behavior_based/configure.hpp>
 
+// XXX 線形リスト前提のペア型という点で少し歪な存在
+
 namespace NAMESPACE { namespace expression
 {
   template <typename...>
@@ -50,22 +52,22 @@ namespace NAMESPACE { namespace expression
     {}
   };
 
-  #define SELECTOR(NAME) \
+  #define SELECTOR(SLOT) \
   template <typename List> \
-  constexpr decltype(auto) NAME(const List& list) noexcept \
+  constexpr decltype(auto) SLOT(const List& list) noexcept \
   { \
-    return static_cast<const typename List::NAME&>(list); \
+    return static_cast<const typename List::SLOT&>(list); \
   }
 
   SELECTOR(car)
   SELECTOR(cdr)
 
-  // template <typename... Ts>
-  // constexpr auto list(Ts&&... xs)
-  //   -> list<typename std::decay<Ts>::type...>
-  // {
-  //   return {std::forward<Ts>(xs)...};
-  // }
+  template <typename... Ts>
+  constexpr auto make_list(Ts&&... xs)
+    -> list<typename std::decay<Ts>::type...>
+  {
+    return {std::forward<Ts>(xs)...};
+  }
 }} // namespace NAMESPACE::expression
 
 #endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_LIST_HPP
