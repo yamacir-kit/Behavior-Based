@@ -22,12 +22,11 @@ namespace NAMESPACE { namespace behavior
         extract<Velocity>().from(environment)
       };
 
-      const auto defired {
+      const auto desired {
         extract<Target>().from(environment).normalized() * velocity_traits<Velocity>::max
       };
 
-      const auto steering {desired - current};
-      return steering;
+      return desired - current; // steering
     }
   };
 }} // namespace NAMESPACE::behavior
