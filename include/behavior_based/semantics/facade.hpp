@@ -24,11 +24,11 @@ namespace NAMESPACE { namespace semantics
       return static_cast<const Category<Message>&>(*this)(std::forward<Ts>(xs)...);
     }
 
-    template <typename... Ts>
-    constexpr decltype(auto) operator()(Ts&&... xs)
-    {
-      return static_cast<Category<Message>&>(*this)(std::forward<Ts>(xs)...);
-    }
+    // template <typename... Ts>
+    // constexpr decltype(auto) operator()(Ts&&... xs)
+    // {
+    //   return static_cast<Category<Message>&>(*this)(std::forward<Ts>(xs)...);
+    // }
 
     template <typename... Ts>
     constexpr decltype(auto) from(Ts&&... xs) const

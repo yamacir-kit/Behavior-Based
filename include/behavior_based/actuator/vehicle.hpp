@@ -9,6 +9,7 @@
 
 #include <behavior_based/configure.hpp>
 #include <behavior_based/geometry/angle.hpp>
+#include <behavior_based/semantics/extractor.hpp>
 #include <behavior_based/semantics/velocity.hpp>
 
 // XXX 暫定的に古いAPIをそのまま移植しているため、ここだけAPIがクソ仕様
@@ -22,14 +23,14 @@ namespace NAMESPACE { namespace actuator
   template <typename Velocity>
   struct vehicle<Velocity>
   {
-    using behavior_output_type
+    using output_type
       = typename semantics::velocity_traits<Velocity>::output_type;
 
     template <typename Environment>
-    decltype(auto) operator()(const behavior_output_type& steering,
+    decltype(auto) operator()(const output_type& steering,
                               const Environment& environment) const
     {
-      const auto current {static_cast<const Velocity&>(environment)()};
+      const auto current {semantics::extract<Velocity>().from(environment)};
 
       const auto desired {current + steering};
 

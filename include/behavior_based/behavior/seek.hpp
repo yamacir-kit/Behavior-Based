@@ -2,7 +2,7 @@
 #define INCLUDED_BEHAVIOR_BASED_BEHAVIOR_SEEK_HPP
 
 #include <behavior_based/configure.hpp>
-// #include <behavior_based/semantics/extractor.hpp>
+#include <behavior_based/semantics/extractor.hpp>
 #include <behavior_based/semantics/velocity.hpp>
 
 namespace NAMESPACE { namespace behavior
@@ -18,20 +18,16 @@ namespace NAMESPACE { namespace behavior
     {
       using namespace semantics;
 
-      const auto current {
-        // extract<Velocity>().from(environment)
-        static_cast<const Velocity&>(environment)()
-      };
+      const auto current {extract<Velocity>().from(environment)};
+      std::cerr << "[debug] current: " << current << std::endl;
 
-      // TODO
-      // セマンティクスの関数呼び出し演算子をキャスト演算子に変更して、
-      // ２段キャストをセマンティックキャストとしてAPIを用意すること
-
+      std::cerr << "[target] " << extract<Target>().from(environment) << std::endl;
+      std::cerr << "[normalized] " << extract<Target>().from(environment).normalized() << std::endl;
       const auto desired {
-          // extract<Target>().from(environment).normalized()
-          static_cast<const Target&>(environment)().normalized()
+          extract<Target>().from(environment).normalized()
         * velocity_traits<Velocity>::linear_max
       };
+      std::cerr << "[debug] desired: " << desired << std::endl;
 
       return desired - current; // steering
     }

@@ -6,9 +6,9 @@
 namespace NAMESPACE { namespace semantics
 {
   template <typename Semantics, typename... Ts>
-  auto& extract(Ts&&... xs) noexcept
+  auto extract(Ts&&... xs) noexcept
   {
-    static Semantics semantics {std::forward<Ts>(xs)...};
+    Semantics semantics {std::forward<Ts>(xs)...};
     return semantics;
   }
 }} // namespace NAMESPACE::semantics

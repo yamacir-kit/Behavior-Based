@@ -42,7 +42,7 @@ int main(int argc, char** argv)
    * 対話環境に対する各ビヘイビアの出力をフォールドしてシステム全体の出力となる。
    */
   // constexpr expression::list<slave> behaviors {};
-  constexpr slave behaviors {};
+  slave behaviors {};
 
   /**
    * 最終出力をメッセージとして送信するためののヘルパ関数。
@@ -52,6 +52,7 @@ int main(int argc, char** argv)
   auto output {expression::dispatch(
     [&](const geometry_msgs::Twist& data)
     {
+      std::cerr << "output" << std::endl;
       static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
       geometry_msgs::TwistStamped twist {};
       twist.header.stamp = ros::Time::now();
@@ -60,7 +61,7 @@ int main(int argc, char** argv)
     }
   )};
 
-  constexpr actuator::vehicle<
+  actuator::vehicle<
     semantics::velocity<nav_msgs::Odometry>
   > actuate {};
 
@@ -74,12 +75,15 @@ int main(int argc, char** argv)
   handle.subscribe<TYPENAME>(TOPICNAME, 1,                                     \
     CALLBACK(TYPENAME,                                                         \
     {                                                                          \
-      std::cerr << "callback" << std::endl;                                    \
+      std::cerr << #TOPICNAME << "/callback" << std::endl;                     \
       static_cast<TYPENAME::ConstPtr&>(interaction_environment) = message;     \
                                                                                \
       const auto reaction {behaviors(interaction_environment)};                \
+      std::cerr << reaction << std::endl;                                      \
                                                                                \
-      return output(actuate(reaction, interaction_environment));               \
+      const auto actuation {actuate(reaction, interaction_environment)};       \
+      std::cerr << actuation.linear.x << ", " << actuation.angular.z << std::endl; \
+      return output(actuation);                                                \
     })                                                                         \
   )
 

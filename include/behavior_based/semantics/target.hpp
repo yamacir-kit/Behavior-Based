@@ -21,7 +21,9 @@ namespace NAMESPACE { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
-    return output_type {(*this)->axes[1], (*this)->axes[2]};
+    std::cerr << "axes[1] " << message->axes[1] << std::endl;
+    std::cerr << "axes[2] " << message->axes[2] << std::endl;
+    return output_type {message->axes[1], message->axes[2]};
   });
 }} // namespace NAMESPACE::semantics
 

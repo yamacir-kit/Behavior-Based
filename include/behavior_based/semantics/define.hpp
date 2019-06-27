@@ -29,7 +29,8 @@ struct CATEGORY_NAME<expression::unit>                                         \
     : expression::unit {std::forward<Ts>(xs)...}                               \
   {}                                                                           \
                                                                                \
-  decltype(auto) operator()() const noexcept                                   \
+  template <typename... Ts>                                                    \
+  decltype(auto) operator()(Ts&&...) const noexcept                            \
   {                                                                            \
     return DEFAULT_OUTPUT;                                                     \
   }                                                                            \
@@ -40,16 +41,10 @@ struct CATEGORY_NAME<expression::unit>                                         \
 template <>                                                                    \
 struct CATEGORY<TYPE>                                                          \
   : public facade<CATEGORY, TYPE>                                              \
-  , public TYPE::ConstPtr                                                      \
 {                                                                              \
-  template <typename... Ts>                                                    \
-  constexpr CATEGORY(Ts&&... xs)                                               \
-    : TYPE::ConstPtr {std::forward<Ts>(xs)...}                                 \
-  {}                                                                           \
-                                                                               \
-  output_type operator()() const                                               \
+  output_type operator()(const TYPE::ConstPtr& message) const                  \
   {                                                                            \
-    if (*this) __VA_ARGS__ else return velocity<expression::unit> {}();        \
+    if (message) __VA_ARGS__ else return velocity<expression::unit> {}();      \
   }                                                                            \
 };
 
