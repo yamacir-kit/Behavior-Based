@@ -22,8 +22,10 @@ namespace NAMESPACE { namespace behavior
         extract<CurrentVelocity>().from(environment)
       };
 
+      const auto target {extract<Target>().from(environment).normalized()};
+
       const auto desired_velocity {
-        extract<Target>().from(environment).normalized() * current_velocity_traits<CurrentVelocity>::linear_max
+        target * current_velocity_traits<CurrentVelocity>::linear_max
       };
 
       return desired_velocity - current_velocity; // steering

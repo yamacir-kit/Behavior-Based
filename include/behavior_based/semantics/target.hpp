@@ -18,7 +18,7 @@ namespace NAMESPACE { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
-    return output_type {message->axes[1], message->axes[2]};
+    return {message->axes[1], message->axes[2]};
   });
 }} // namespace NAMESPACE::semantics
 
