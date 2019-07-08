@@ -3,7 +3,7 @@
 
 #include <behavior_based/configure.hpp>
 #include <behavior_based/semantics/extractor.hpp>
-#include <behavior_based/semantics/velocity.hpp>
+#include <behavior_based/semantics/current_velocity.hpp>
 
 namespace NAMESPACE { namespace behavior
 {
@@ -14,7 +14,7 @@ namespace NAMESPACE { namespace behavior
 
     template <typename Environment>
     auto operator()(const Environment& environment) const
-      -> typename semantics::velocity_traits<CurrentVelocity>::output_type
+      -> typename semantics::current_velocity_traits<CurrentVelocity>::output_type
     {
       using namespace semantics;
 
@@ -23,7 +23,7 @@ namespace NAMESPACE { namespace behavior
       };
 
       const auto desired_velocity {
-        extract<Target>().from(environment).normalized() * velocity_traits<CurrentVelocity>::linear_max
+        extract<Target>().from(environment).normalized() * current_velocity_traits<CurrentVelocity>::linear_max
       };
 
       return desired_velocity - current_velocity; // steering
