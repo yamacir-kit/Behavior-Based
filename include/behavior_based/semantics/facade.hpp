@@ -7,10 +7,10 @@
 
 namespace NAMESPACE { namespace semantics
 {
-  template <template <typename...> typename Category, typename Message, typename Vector = Eigen::Vector2d>
+  template <template <typename...> typename Category, typename Message>
   struct facade
   {
-    using vector_type = Vector;
+    using vector_type = Eigen::Vector2d;
 
     using message_type = Message;
 

@@ -2,13 +2,13 @@
 
 #include <ros/ros.h>
 
-#include <geometry_msgs/TwistStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Joy.h>
+#include <lgsvl_msgs/Detection3DArray.h>
 
 #include <behavior_based/actuator/vehicle.hpp>
 
-#include <behavior_based/behavior/seek.hpp>
+#include <behavior_based/behavior/variable_matching.hpp>
 
 #include <behavior_based/configure.hpp>
 
@@ -46,23 +46,41 @@ int main(int argc, char** argv)
    * almost current, allowed time delay is depend on your system).
    */
   using environment
-    = expression::list<
-        nav_msgs::Odometry::ConstPtr
-      , sensor_msgs::Joy::ConstPtr
+    = expression::list
+      <
+        lgsvl_msgs::Detection3DArray::ConstPtr,
+        nav_msgs::Odometry::ConstPtr,
+        sensor_msgs::Joy::ConstPtr
       >;
 
   environment current_environment {};
 
   using slave
-    = behavior::seek<
+    = behavior::seek
+      <
         semantics::current_velocity<nav_msgs::Odometry>,
         semantics::target<sensor_msgs::Joy>
       >;
 
   using forward
-    = behavior::seek<
+    = behavior::seek
+      <
         semantics::current_velocity<nav_msgs::Odometry>,
         semantics::forward<Eigen::Vector2d>
+      >;
+
+  using avoidance
+    = behavior::flee
+      <
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::target<lgsvl_msgs::Detection3DArray>
+      >;
+
+  using nop
+    = behavior::seek
+      <
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::target<expression::unit>
       >;
 
   /**
@@ -73,8 +91,7 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  // slave behaviors {};
-  constexpr expression::list<slave, forward> behaviors {};
+  expression::list<slave, avoidance> behaviors {};
 
   /**
    * Message publisher dispatcher.
@@ -82,29 +99,18 @@ int main(int argc, char** argv)
    * A folded output of each behaviors are dispatched by its type and published.
    * The dispatcher element takes a ROS message type and is responsible for
    * publishing the message. If your system does not rely on ROS, you can
-   * transfer data to drivers or actuators in a framework-dependent way.
+   * send data to drivers or actuators in a framework-dependent way.
    *
    * This dispatcher is provided for cases where this library is used to
    * describe MIMO systems. For the MISO system, it is sufficient to simply give
-   * the dispatcher only one element (or use simple function instead of
+   * the dispatcher only one element (or use simple publish function instead of
    * dispatcher).
    */
   auto publish {expression::dispatch(
-    [&](const geometry_msgs::Twist& data)
-    {
-      static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
-      geometry_msgs::TwistStamped twist {};
-      twist.header.stamp = ros::Time::now();
-      twist.twist = data;
-      return p.publish(twist);
-    },
-
     [&](const autoware_msgs::VehicleCmd& data)
     {
       static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
-      auto command {data};
-      command.twist_cmd.header.stamp = ros::Time::now();
-      return publisher.publish(command);
+      return publisher.publish(data);
     }
   )};
 
@@ -112,9 +118,17 @@ int main(int argc, char** argv)
     semantics::current_velocity<nav_msgs::Odometry>
   > actuate {};
 
+  /**
+   * Prioritized Acceleration Allocation is well-known behavior outputs combine
+   * method.
+   *
+   * This library describes behaviors as list of functors. Thus, calculating
+   * each behavior's output and combining can be express as fold (term in
+   * functional programming).
+   */
   auto prioritized_acceleration_allocation = [&]()
   {
-    auto allocate = [&](const auto& a, const auto& b)
+    auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
     {
       auto strategic_importance = [&](const auto& v)
       {
@@ -149,8 +163,9 @@ int main(int argc, char** argv)
   )
 
   std::vector<ros::Subscriber> sensory {
-    CONNECT(nav_msgs::Odometry, "/odom")
-  , CONNECT(sensor_msgs::Joy,   "/joy")
+    CONNECT(nav_msgs::Odometry,           "/odom")
+  , CONNECT(lgsvl_msgs::Detection3DArray, "/simulator/ground_truth/3d_detections")
+  , CONNECT(sensor_msgs::Joy,             "/joy")
   };
 
   ros::spin();
