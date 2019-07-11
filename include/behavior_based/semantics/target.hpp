@@ -47,7 +47,36 @@ namespace NAMESPACE { namespace semantics
         }
       )};
 
-      return {iter->bbox.position.position.x, iter->bbox.position.position.y};
+      // p.145
+      auto magnitude = [&](const auto& detection)
+      {
+        // Sphere of influence (radial extent of force from the center of the obstacle).
+        constexpr auto s {20.0};
+
+        // Radius of obstacle.
+        constexpr auto r {2.0};
+
+        // Distance of robot to center of obstacle.
+        const auto d {distance(detection)};
+
+        if (s < d)
+        {
+          std::cerr << "0.0" << std::endl;
+          return 0.0;
+        }
+        else if (r < d && d <= s)
+        {
+          std::cerr << (s - d) / (s - r) << std::endl;
+          return (s - d) / (s - r);
+        }
+        else // d <= r
+        {
+          std::cerr << "1.0" << std::endl;
+          return 1.0;
+        }
+      };
+
+      return vector_type {iter->bbox.position.position.x, iter->bbox.position.position.y} * magnitude(*iter);
     }
     else
     {
