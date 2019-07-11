@@ -74,6 +74,8 @@ namespace NAMESPACE { namespace semantics
           std::cerr << "1.0" << std::endl;
           return 1.0;
         }
+
+        // return 1.0 / std::pow(distance(detection), 2);
       };
 
       return vector_type {iter->bbox.position.position.x, iter->bbox.position.position.y} * magnitude(*iter);

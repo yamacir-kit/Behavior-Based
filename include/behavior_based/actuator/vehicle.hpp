@@ -39,16 +39,19 @@ namespace NAMESPACE { namespace actuator
 
       const auto angle {geometry::angle(Eigen::Vector2d::UnitX(), desired_velocity)};
 
-      // geometry_msgs::Twist twist {};
       autoware_msgs::VehicleCmd command {};
 
+      // command.gear = (desired_velocity.x() < 0 ? 64 : 1);
+
       command.twist_cmd.twist.linear.x
-        = desired_velocity.norm() * std::max(std::cos(angle), 0.0);
+        = desired_velocity.norm(); // * std::max(std::cos(angle), 0.0);
 
       command.twist_cmd.twist.angular.z
         = boost::math::sign(desired_velocity[1])
           * angle
           * (angular_velocity_max / boost::math::constants::pi<double>());
+
+      command.twist_cmd.header.stamp = ros::Time::now();
 
       return command;
     }
