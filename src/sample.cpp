@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 
   auto prioritized_acceleration_allocation = [&]()
   {
-    auto allocate = [&](const auto& a, const auto& b)
+    auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
     {
       auto strategic_importance = [&](const auto& v)
       {
