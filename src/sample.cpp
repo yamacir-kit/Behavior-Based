@@ -13,6 +13,7 @@
 #include <behavior_based/configure.hpp>
 
 #include <behavior_based/expression/dispatch.hpp>
+#include <behavior_based/expression/fold.hpp>
 #include <behavior_based/expression/list.hpp>
 
 #include <behavior_based/geometry/angle.hpp>
@@ -20,6 +21,8 @@
 #include <behavior_based/semantics/current_velocity.hpp>
 #include <behavior_based/semantics/forward.hpp>
 #include <behavior_based/semantics/target.hpp>
+
+#include <behavior_based/utility/demangle.hpp>
 
 /**
  * FAQ
@@ -70,8 +73,8 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  slave behaviors {};
-  // constexpr expression::list<slave, forward> behaviors {};
+  // slave behaviors {};
+  constexpr expression::list<slave, forward> behaviors {};
 
   /**
    * Message publisher dispatcher.
@@ -86,7 +89,7 @@ int main(int argc, char** argv)
    * the dispatcher only one element (or use simple function instead of
    * dispatcher).
    */
-  auto output {expression::dispatch(
+  auto publish {expression::dispatch(
     [&](const geometry_msgs::Twist& data)
     {
       static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
@@ -109,6 +112,21 @@ int main(int argc, char** argv)
     semantics::current_velocity<nav_msgs::Odometry>
   > actuate {};
 
+  auto prioritized_acceleration_allocation = [&]()
+  {
+    auto allocate = [&](const auto& a, const auto& b)
+    {
+      auto strategic_importance = [&](const auto& v)
+      {
+        return geometry::angle(Eigen::Vector2d::UnitX(), v) / boost::math::constants::pi<double>();
+      };
+
+      return a + (1.0 - strategic_importance(a)) * b(current_environment);
+    };
+
+    return expression::fold_left(behaviors, Eigen::Vector2d::Zero(), allocate);
+  };
+
   #define CALLBACK(TYPENAME, ...)                                              \
   std::function<void (const TYPENAME::ConstPtr&)>                              \
   {                                                                            \
@@ -121,10 +139,12 @@ int main(int argc, char** argv)
     {                                                                          \
       static_cast<TYPENAME::ConstPtr&>(current_environment) = message;         \
                                                                                \
-      const auto reaction {behaviors(current_environment)};                    \
-                                                                               \
-      const auto actuation {actuate(reaction, current_environment)};           \
-      return output(actuation);                                                \
+      return publish(                                                          \
+               actuate(                                                        \
+                 prioritized_acceleration_allocation(),                        \
+                 current_environment                                           \
+               )                                                               \
+             );                                                                \
     })                                                                         \
   )
 
