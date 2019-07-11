@@ -2,9 +2,10 @@
 
 #include <ros/ros.h>
 
-#include <geometry_msgs/TwistStamped.h>
+// #include <geometry_msgs/TwistStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Joy.h>
+#include <lgsvl_msgs/Detection3DArray.h>
 
 #include <behavior_based/actuator/vehicle.hpp>
 
@@ -48,6 +49,7 @@ int main(int argc, char** argv)
   using environment
     = expression::list<
         nav_msgs::Odometry::ConstPtr
+      , lgsvl_msgs::Detection3DArray::ConstPtr
       , sensor_msgs::Joy::ConstPtr
       >;
 
@@ -90,14 +92,14 @@ int main(int argc, char** argv)
    * dispatcher).
    */
   auto publish {expression::dispatch(
-    [&](const geometry_msgs::Twist& data)
-    {
-      static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
-      geometry_msgs::TwistStamped twist {};
-      twist.header.stamp = ros::Time::now();
-      twist.twist = data;
-      return p.publish(twist);
-    },
+    // [&](const geometry_msgs::Twist& data)
+    // {
+    //   static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
+    //   geometry_msgs::TwistStamped twist {};
+    //   twist.header.stamp = ros::Time::now();
+    //   twist.twist = data;
+    //   return p.publish(twist);
+    // },
 
     [&](const autoware_msgs::VehicleCmd& data)
     {
@@ -149,8 +151,9 @@ int main(int argc, char** argv)
   )
 
   std::vector<ros::Subscriber> sensory {
-    CONNECT(nav_msgs::Odometry, "/odom")
-  , CONNECT(sensor_msgs::Joy,   "/joy")
+    CONNECT(nav_msgs::Odometry,           "/odom")
+  , CONNECT(lgsvl_msgs::Detection3DArray, "/simulator/ground_truth/3d_detections")
+  , CONNECT(sensor_msgs::Joy,             "/joy")
   };
 
   ros::spin();
