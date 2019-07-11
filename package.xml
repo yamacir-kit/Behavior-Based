@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 
+<!-- THIS FILE AUTO GENERATED FROM "configure/package.xml.cmake" -->
+
 <package format="2">
   <name>behavior_based</name>
-  <version>0.0.42</version>
+  <version>0.0.45</version>
 
   <description>
     Behavior-based robotics libraries for ROS.
@@ -16,6 +18,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>autoware_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>

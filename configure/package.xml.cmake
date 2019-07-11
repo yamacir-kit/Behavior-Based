@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- THIS FILE AUTO GENERATED FROM "configure/package.xml.cmake" -->
+
 <package format="2">
   <name>behavior_based</name>
   <version>${MAJOR}.${MINOR}.${SUBMINOR}</version>
@@ -16,6 +18,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>autoware_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
