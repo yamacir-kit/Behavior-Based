@@ -57,6 +57,14 @@ int main(int argc, char** argv)
       twist.header.stamp = ros::Time::now();
       twist.twist = data;
       return p.publish(twist);
+    },
+
+    [&](const autoware_msgs::VehicleCmd& data)
+    {
+      static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
+      auto command {data};
+      command.twist_cmd.header.stamp = ros::Time::now();
+      return publisher.publish(command);
     }
   )};
 
