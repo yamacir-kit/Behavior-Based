@@ -77,7 +77,6 @@ int main(int argc, char** argv)
         semantics::target<lgsvl_msgs::Detection3DArray>
       >;
 
-  // XXX dirty hack
   using nop
     = behavior::seek
       <
@@ -93,7 +92,7 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  expression::list<slave, forward, nop> behaviors {};
+  expression::list<slave, avoidance> behaviors {};
 
   /**
    * Message publisher dispatcher.
@@ -101,11 +100,11 @@ int main(int argc, char** argv)
    * A folded output of each behaviors are dispatched by its type and published.
    * The dispatcher element takes a ROS message type and is responsible for
    * publishing the message. If your system does not rely on ROS, you can
-   * transfer data to drivers or actuators in a framework-dependent way.
+   * send data to drivers or actuators in a framework-dependent way.
    *
    * This dispatcher is provided for cases where this library is used to
    * describe MIMO systems. For the MISO system, it is sufficient to simply give
-   * the dispatcher only one element (or use simple function instead of
+   * the dispatcher only one element (or use simple publish function instead of
    * dispatcher).
    */
   auto publish {expression::dispatch(
@@ -122,7 +121,7 @@ int main(int argc, char** argv)
     {
       static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
       auto command {data};
-      command.twist_cmd.header.stamp = ros::Time::now();
+      command.twist_cmd.header.stamp = ros::Time::now(); // TODO MOVE INTO ACTUATOR::VEHICLE
       return publisher.publish(command);
     }
   )};
@@ -131,6 +130,14 @@ int main(int argc, char** argv)
     semantics::current_velocity<nav_msgs::Odometry>
   > actuate {};
 
+  /**
+   * Prioritized Acceleration Allocation is well-known behavior outputs combine
+   * method.
+   *
+   * This library describes behaviors as list of functors. Thus, calculating
+   * each behavior's output and combining can be express as fold (term in
+   * functional programming).
+   */
   auto prioritized_acceleration_allocation = [&]()
   {
     auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
