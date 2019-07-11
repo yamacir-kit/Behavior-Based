@@ -7,12 +7,24 @@
 #include <sensor_msgs/Joy.h>
 
 #include <behavior_based/actuator/vehicle.hpp>
+
 #include <behavior_based/behavior/seek.hpp>
+
 #include <behavior_based/configure.hpp>
+
 #include <behavior_based/expression/dispatch.hpp>
 #include <behavior_based/expression/list.hpp>
-#include <behavior_based/semantics/target.hpp>
+
 #include <behavior_based/semantics/current_velocity.hpp>
+#include <behavior_based/semantics/forward.hpp>
+#include <behavior_based/semantics/target.hpp>
+
+/**
+ * FAQ
+ *
+ * Q. Why use structure to implement behavior instead of simple function?
+ * A. Because C++ not allows partial specialization of function.
+ */
 
 int main(int argc, char** argv)
 {
@@ -36,10 +48,18 @@ int main(int argc, char** argv)
         semantics::target<sensor_msgs::Joy>
       >;
 
+  using forward
+    = behavior::seek<
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::forward<Eigen::Vector2d>
+      >;
+
   /**
-   * ビヘイビアの線形リスト。
-   * 各ビヘイビアはファンクタで対話環境から興味のある情報の抽出方法を知っている。
-   * 対話環境に対する各ビヘイビアの出力をフォールドしてシステム全体の出力となる。
+   * The linear list of behaviors. Each behavior knows how to extract
+   * information which it interested in from current environment. Each output
+   * (independent from each other) are folded into one output by higher order
+   * function `expression::fold`, and then publish (publisher dispatched by
+   * output type).
    */
   // constexpr expression::list<slave> behaviors {};
   slave behaviors {};
