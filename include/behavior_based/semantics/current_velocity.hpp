@@ -18,14 +18,15 @@
 
 namespace NAMESPACE { namespace semantics
 {
-  DEFINE_SEMANTICS_CATEGORY(current_velocity, output_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY(current_velocity, vector_type::Zero());
 
   template <typename CurrentVelocity>
   struct current_velocity_traits
   {
-    using output_type = typename CurrentVelocity::output_type;
+    using vector_type
+      = typename CurrentVelocity::vector_type;
 
-    static constexpr auto linear_max = 10.0; // [m/s]
+    static constexpr auto linear_max {10.0}; // [m/s]
 
     static constexpr auto angular_min {-boost::math::constants::pi<double>()}; // [rad/s]
     static constexpr auto angular_max {+boost::math::constants::pi<double>()}; // [rad/s]
@@ -33,7 +34,7 @@ namespace NAMESPACE { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::Twist,
   {
-    return output_type {
+    return vector_type {
       std::cos(message->angular.z),
       std::sin(message->angular.z)
     } * message->linear.x;
@@ -41,7 +42,7 @@ namespace NAMESPACE { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::TwistStamped,
   {
-    return output_type {
+    return vector_type {
       std::cos(message->twist.angular.z),
       std::sin(message->twist.angular.z)
     } * message->twist.linear.x;
@@ -49,7 +50,7 @@ namespace NAMESPACE { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, nav_msgs::Odometry,
   {
-    return output_type {
+    return vector_type {
       std::cos(message->twist.twist.angular.z),
       std::sin(message->twist.twist.angular.z)
     } * message->twist.twist.linear.x;

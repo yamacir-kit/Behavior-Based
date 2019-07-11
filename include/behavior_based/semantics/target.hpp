@@ -8,12 +8,12 @@
 
 namespace NAMESPACE { namespace semantics
 {
-  DEFINE_SEMANTICS_CATEGORY(target, output_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY(target, vector_type::Zero());
 
   template <typename Target>
   struct target_traits
   {
-    using output_type = typename Target::output_type;
+    using vector_type = typename Target::vector_type;
   };
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,

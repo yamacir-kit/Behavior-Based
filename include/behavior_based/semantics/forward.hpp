@@ -5,10 +5,13 @@
 
 namespace NAMESPACE { namespace semantics
 {
-  DEFINE_SEMANTICS_CATEGORY(forward, output_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY(forward, vector_type::Zero());
 
   /**
    * This semantics is implemented for debug purpose.
+   *
+   * This semantics extract a vector that always advances the robot (note that
+   * the vector is the robot's coordinate system) even if empty arguments.
    */
   template <typename Vector>
   struct forward<Vector>
