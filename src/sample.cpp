@@ -12,7 +12,7 @@
 #include <behavior_based/expression/dispatch.hpp>
 #include <behavior_based/expression/list.hpp>
 #include <behavior_based/semantics/target.hpp>
-#include <behavior_based/semantics/velocity.hpp>
+#include <behavior_based/semantics/current_velocity.hpp>
 
 int main(int argc, char** argv)
 {
@@ -28,11 +28,11 @@ int main(int argc, char** argv)
       , sensor_msgs::Joy::ConstPtr
       >;
 
-  environment interaction_environment {};
+  environment current_environment {};
 
   using slave
     = behavior::seek<
-        semantics::velocity<nav_msgs::Odometry>,
+        semantics::current_velocity<nav_msgs::Odometry>,
         semantics::target<sensor_msgs::Joy>
       >;
 
@@ -52,7 +52,6 @@ int main(int argc, char** argv)
   auto output {expression::dispatch(
     [&](const geometry_msgs::Twist& data)
     {
-      std::cerr << "output" << std::endl;
       static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
       geometry_msgs::TwistStamped twist {};
       twist.header.stamp = ros::Time::now();
@@ -62,7 +61,7 @@ int main(int argc, char** argv)
   )};
 
   actuator::vehicle<
-    semantics::velocity<nav_msgs::Odometry>
+    semantics::current_velocity<nav_msgs::Odometry>
   > actuate {};
 
   #define CALLBACK(TYPENAME, ...)                                              \
@@ -75,14 +74,11 @@ int main(int argc, char** argv)
   handle.subscribe<TYPENAME>(TOPICNAME, 1,                                     \
     CALLBACK(TYPENAME,                                                         \
     {                                                                          \
-      std::cerr << #TOPICNAME << "/callback" << std::endl;                     \
-      static_cast<TYPENAME::ConstPtr&>(interaction_environment) = message;     \
+      static_cast<TYPENAME::ConstPtr&>(current_environment) = message;         \
                                                                                \
-      const auto reaction {behaviors(interaction_environment)};                \
-      std::cerr << reaction << std::endl;                                      \
+      const auto reaction {behaviors(current_environment)};                    \
                                                                                \
-      const auto actuation {actuate(reaction, interaction_environment)};       \
-      std::cerr << actuation.linear.x << ", " << actuation.angular.z << std::endl; \
+      const auto actuation {actuate(reaction, current_environment)};           \
       return output(actuation);                                                \
     })                                                                         \
   )
@@ -93,15 +89,6 @@ int main(int argc, char** argv)
   };
 
   ros::spin();
-
-  // for (ros::Rate rate {10}; ros::ok(); rate.sleep())
-  // {
-  //   geometry_msgs::TwistStamped twist {};
-  //   twist.header.stamp = ros::Time::now();
-  //   twist.twist.linear.x = 1.0;
-  //
-  //   publish(twist);
-  // }
 
   return boost::exit_success;
 }

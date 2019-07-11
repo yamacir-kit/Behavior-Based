@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_VELOCITY_HPP
-#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_VELOCITY_HPP
+#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
+#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
 
 #include <cmath>
 
@@ -18,20 +18,20 @@
 
 namespace NAMESPACE { namespace semantics
 {
-  DEFINE_SEMANTICS_CATEGORY(velocity, output_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY(current_velocity, output_type::Zero());
 
-  template <typename Velocity>
-  struct velocity_traits
+  template <typename CurrentVelocity>
+  struct current_velocity_traits
   {
-    using output_type = typename Velocity::output_type;
+    using output_type = typename CurrentVelocity::output_type;
 
     static constexpr auto linear_max = 10.0; // [m/s]
-    static constexpr auto angular_max = boost::math::constants::pi<double>(); // [rad/s]
+
+    static constexpr auto angular_min {-boost::math::constants::pi<double>()}; // [rad/s]
+    static constexpr auto angular_max {+boost::math::constants::pi<double>()}; // [rad/s]
   };
 
-  // TODO Eigen が賢いコンストラクタを持ってるのでそれを使うように修正すること
-
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::Twist,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::Twist,
   {
     return output_type {
       std::cos(message->angular.z),
@@ -39,7 +39,7 @@ namespace NAMESPACE { namespace semantics
     } * message->linear.x;
   });
 
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::TwistStamped,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::TwistStamped,
   {
     return output_type {
       std::cos(message->twist.angular.z),
@@ -47,7 +47,7 @@ namespace NAMESPACE { namespace semantics
     } * message->twist.linear.x;
   });
 
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, nav_msgs::Odometry,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, nav_msgs::Odometry,
   {
     return output_type {
       std::cos(message->twist.twist.angular.z),
@@ -56,5 +56,5 @@ namespace NAMESPACE { namespace semantics
   });
 }} // namespace NAMESPACE::semantics
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_VELOCITY_HPP
+#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
 

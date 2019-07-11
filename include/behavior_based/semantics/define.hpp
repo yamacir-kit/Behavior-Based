@@ -6,14 +6,6 @@
 #include <behavior_based/expression/list.hpp>
 #include <behavior_based/semantics/facade.hpp>
 
-// 関数呼び出し演算子になってるのはAPI変更のための一時的な仕様なので勘弁
-
-// XXX
-// ユニット型がキャスト保証として働いているせいで、
-// 必要な型が不足してる場合に計算結果がゼロになることまで見ぬいてしまう
-// 「足りてないからコンパイルエラー」とするのか、
-// 「足りてないから無意味、よって最適化で式ごと消し去る」が良いのかは悩みどころ
-
 #define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_OUTPUT)               \
                                                                                \
 template <typename...>                                                         \
@@ -44,7 +36,7 @@ struct CATEGORY<TYPE>                                                          \
 {                                                                              \
   output_type operator()(const TYPE::ConstPtr& message) const                  \
   {                                                                            \
-    if (message) __VA_ARGS__ else return velocity<expression::unit> {}();      \
+    if (message) __VA_ARGS__ else return CATEGORY<expression::unit> {}();      \
   }                                                                            \
 };
 

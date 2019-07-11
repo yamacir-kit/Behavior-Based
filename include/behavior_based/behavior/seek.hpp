@@ -3,33 +3,32 @@
 
 #include <behavior_based/configure.hpp>
 #include <behavior_based/semantics/extractor.hpp>
-#include <behavior_based/semantics/velocity.hpp>
+#include <behavior_based/semantics/current_velocity.hpp>
 
 namespace NAMESPACE { namespace behavior
 {
-  template <typename Velocity, typename Target>
+  template <typename CurrentVelocity, typename Target>
   struct seek
   {
     constexpr seek() = default;
 
     template <typename Environment>
     auto operator()(const Environment& environment) const
-      -> typename semantics::velocity_traits<Velocity>::output_type
+      -> typename semantics::current_velocity_traits<CurrentVelocity>::output_type
     {
       using namespace semantics;
 
-      const auto current {extract<Velocity>().from(environment)};
-      std::cerr << "[debug] current: " << current << std::endl;
-
-      std::cerr << "[target] " << extract<Target>().from(environment) << std::endl;
-      std::cerr << "[normalized] " << extract<Target>().from(environment).normalized() << std::endl;
-      const auto desired {
-          extract<Target>().from(environment).normalized()
-        * velocity_traits<Velocity>::linear_max
+      const auto current_velocity {
+        extract<CurrentVelocity>().from(environment)
       };
-      std::cerr << "[debug] desired: " << desired << std::endl;
 
-      return desired - current; // steering
+      const auto target {extract<Target>().from(environment).normalized()};
+
+      const auto desired_velocity {
+        target * current_velocity_traits<CurrentVelocity>::linear_max
+      };
+
+      return desired_velocity - current_velocity; // steering
     }
   };
 }} // namespace NAMESPACE::behavior
