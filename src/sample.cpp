@@ -77,6 +77,14 @@ int main(int argc, char** argv)
         semantics::target<lgsvl_msgs::Detection3DArray>
       >;
 
+  // XXX dirty hack
+  using nop
+    = behavior::seek
+      <
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::target<expression::unit>
+      >;
+
   /**
    * The linear list of behaviors.
    *
@@ -85,8 +93,7 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  // slave behaviors {};
-  constexpr expression::list<slave, avoidance> behaviors {};
+  expression::list<slave, forward, nop> behaviors {};
 
   /**
    * Message publisher dispatcher.

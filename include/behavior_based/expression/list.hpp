@@ -41,7 +41,7 @@ namespace NAMESPACE { namespace expression
     , public list<E2, Es...>
   {
     using car = E1;
-    using cdr = list<E1, Es...>;
+    using cdr = list<E2, Es...>;
 
     constexpr list() = default;
 

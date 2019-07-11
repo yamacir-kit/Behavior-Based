@@ -23,11 +23,7 @@ namespace NAMESPACE { namespace expression
      */
     auto lhs {operation(std::forward<Initial>(initial), car(list))};
 
-    return fold_left(
-             static_cast<const typename std::decay<decltype(list)>::type::cdr&>(list),
-             lhs,
-             std::forward<BinaryOperation>(operation)
-           );
+    return fold_left(cdr(list), lhs, std::forward<BinaryOperation>(operation));
   }
 }} // namespace NAMESPACE::expression
 
