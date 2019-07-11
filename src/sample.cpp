@@ -67,6 +67,12 @@ int main(int argc, char** argv)
         semantics::forward<Eigen::Vector2d>
       >;
 
+  using avoidance
+    = behavior::flee<
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::target<lgsvl_msgs::Detection3DArray>
+      >;
+
   /**
    * The linear list of behaviors.
    *
@@ -76,7 +82,7 @@ int main(int argc, char** argv)
    * publish (publisher dispatched by output type).
    */
   // slave behaviors {};
-  constexpr expression::list<slave, forward> behaviors {};
+  constexpr expression::list<slave, avoidance> behaviors {};
 
   /**
    * Message publisher dispatcher.

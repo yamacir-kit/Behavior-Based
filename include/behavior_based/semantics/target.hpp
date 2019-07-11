@@ -1,6 +1,7 @@
 #ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_TARGET_HPP
 #define INCLUDED_BEHAVIOR_BASED_SEMANTICS_TARGET_HPP
 
+#include <lgsvl_msgs/Detection3DArray.h>
 #include <sensor_msgs/Joy.h>
 
 #include <behavior_based/configure.hpp>
@@ -19,6 +20,12 @@ namespace NAMESPACE { namespace semantics
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
     return {message->axes[1], message->axes[2]};
+  });
+
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, lgsvl_msgs::Detection3DArray,
+  {
+    std::cerr << "message->detections.size() = " << message->detections.size() << std::endl;
+    return vector_type::Zero();
   });
 }} // namespace NAMESPACE::semantics
 

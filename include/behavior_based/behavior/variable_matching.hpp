@@ -24,6 +24,19 @@ namespace NAMESPACE { namespace behavior
     }
   };
 
+  template <typename CurrentVelocity, typename Target>
+  struct flee
+  {
+    using vector_type
+      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+
+    template <typename Environment>
+    vector_type operator()(const Environment& environment) const
+    {
+      return  CURRENT_VELOCITY - TARGET.normalized() * VELOCITY_MAX;
+    }
+  };
+
   #undef CURRENT_VELOCITY
   #undef TARGET
   #undef VELOCITY_MAX
