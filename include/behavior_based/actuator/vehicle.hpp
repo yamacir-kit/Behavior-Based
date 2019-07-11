@@ -5,7 +5,6 @@
 
 #include <boost/math/special_functions.hpp>
 
-// #include <geometry_msgs/Twist.h>
 #include <autoware_msgs/VehicleCmd.h>
 
 #include <behavior_based/configure.hpp>
@@ -21,18 +20,17 @@ namespace NAMESPACE { namespace actuator
   template <typename CurrentVelocity>
   struct vehicle<CurrentVelocity>
   {
-    using output_type
-      = typename semantics::current_velocity_traits<CurrentVelocity>::output_type;
+    using vector_type
+      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+
+    static constexpr auto angular_velocity_max {
+      semantics::current_velocity_traits<CurrentVelocity>::angular_max
+    };
 
     // XXX CurrentVelocity unneeded?
     template <typename Environment>
-    auto operator()(const output_type& steering,
-                    const Environment& environment) const
+    auto operator()(const vector_type& steering, const Environment& environment) const
     {
-      static constexpr auto angular_velocity_max {
-        semantics::current_velocity_traits<CurrentVelocity>::angular_max
-      };
-
       const auto current_velocity {
         semantics::extract<CurrentVelocity>().from(environment)
       };

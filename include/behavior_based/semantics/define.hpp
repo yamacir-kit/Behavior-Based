@@ -6,7 +6,7 @@
 #include <behavior_based/expression/list.hpp>
 #include <behavior_based/semantics/facade.hpp>
 
-#define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_OUTPUT)               \
+#define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_VECTOR)               \
                                                                                \
 template <typename...>                                                         \
 struct CATEGORY_NAME;                                                          \
@@ -24,7 +24,7 @@ struct CATEGORY_NAME<expression::unit>                                         \
   template <typename... Ts>                                                    \
   decltype(auto) operator()(Ts&&...) const noexcept                            \
   {                                                                            \
-    return DEFAULT_OUTPUT;                                                     \
+    return DEFAULT_VECTOR;                                                     \
   }                                                                            \
 }
 
@@ -34,7 +34,7 @@ template <>                                                                    \
 struct CATEGORY<TYPE>                                                          \
   : public facade<CATEGORY, TYPE>                                              \
 {                                                                              \
-  output_type operator()(const TYPE::ConstPtr& message) const                  \
+  vector_type operator()(const TYPE::ConstPtr& message) const                  \
   {                                                                            \
     if (message) __VA_ARGS__ else return CATEGORY<expression::unit> {}();      \
   }                                                                            \

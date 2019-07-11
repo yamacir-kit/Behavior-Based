@@ -7,12 +7,29 @@
 #include <sensor_msgs/Joy.h>
 
 #include <behavior_based/actuator/vehicle.hpp>
+
 #include <behavior_based/behavior/seek.hpp>
+
 #include <behavior_based/configure.hpp>
+
 #include <behavior_based/expression/dispatch.hpp>
+#include <behavior_based/expression/fold.hpp>
 #include <behavior_based/expression/list.hpp>
-#include <behavior_based/semantics/target.hpp>
+
+#include <behavior_based/geometry/angle.hpp>
+
 #include <behavior_based/semantics/current_velocity.hpp>
+#include <behavior_based/semantics/forward.hpp>
+#include <behavior_based/semantics/target.hpp>
+
+#include <behavior_based/utility/demangle.hpp>
+
+/**
+ * FAQ
+ *
+ * Q. Why use functor to implement behavior instead of simple function?
+ * A. Because C++ not allows partial specialization of function.
+ */
 
 int main(int argc, char** argv)
 {
@@ -22,6 +39,12 @@ int main(int argc, char** argv)
 
   ros::NodeHandle handle {"~"};
 
+  /**
+   * The environment is set of sensor data.
+   *
+   * This describes set of latest sensor data which the robot can seen (is
+   * almost current, allowed time delay is depend on your system).
+   */
   using environment
     = expression::list<
         nav_msgs::Odometry::ConstPtr
@@ -36,20 +59,37 @@ int main(int argc, char** argv)
         semantics::target<sensor_msgs::Joy>
       >;
 
-  /**
-   * ビヘイビアの線形リスト。
-   * 各ビヘイビアはファンクタで対話環境から興味のある情報の抽出方法を知っている。
-   * 対話環境に対する各ビヘイビアの出力をフォールドしてシステム全体の出力となる。
-   */
-  // constexpr expression::list<slave> behaviors {};
-  slave behaviors {};
+  using forward
+    = behavior::seek<
+        semantics::current_velocity<nav_msgs::Odometry>,
+        semantics::forward<Eigen::Vector2d>
+      >;
 
   /**
-   * 最終出力をメッセージとして送信するためののヘルパ関数。
-   * 内部にパブリッシャを隠し持ってる。
-   * MIMOを想定したAPIだからディスパッチャになってるけど、今回はMISOなのでひとつだけ。
+   * The linear list of behaviors.
+   *
+   * Each behavior knows how to extract information which it interested in from
+   * current environment. Each output (independent from each other) are folded
+   * into one output by higher order function `expression::fold`, and then
+   * publish (publisher dispatched by output type).
    */
-  auto output {expression::dispatch(
+  // slave behaviors {};
+  constexpr expression::list<slave, forward> behaviors {};
+
+  /**
+   * Message publisher dispatcher.
+   *
+   * A folded output of each behaviors are dispatched by its type and published.
+   * The dispatcher element takes a ROS message type and is responsible for
+   * publishing the message. If your system does not rely on ROS, you can
+   * transfer data to drivers or actuators in a framework-dependent way.
+   *
+   * This dispatcher is provided for cases where this library is used to
+   * describe MIMO systems. For the MISO system, it is sufficient to simply give
+   * the dispatcher only one element (or use simple function instead of
+   * dispatcher).
+   */
+  auto publish {expression::dispatch(
     [&](const geometry_msgs::Twist& data)
     {
       static auto p {handle.advertise<geometry_msgs::TwistStamped>("/twist_raw", 1)};
@@ -72,6 +112,21 @@ int main(int argc, char** argv)
     semantics::current_velocity<nav_msgs::Odometry>
   > actuate {};
 
+  auto prioritized_acceleration_allocation = [&]()
+  {
+    auto allocate = [&](const auto& a, const auto& b)
+    {
+      auto strategic_importance = [&](const auto& v)
+      {
+        return geometry::angle(Eigen::Vector2d::UnitX(), v) / boost::math::constants::pi<double>();
+      };
+
+      return a + (1.0 - strategic_importance(a)) * b(current_environment);
+    };
+
+    return expression::fold_left(behaviors, Eigen::Vector2d::Zero(), allocate);
+  };
+
   #define CALLBACK(TYPENAME, ...)                                              \
   std::function<void (const TYPENAME::ConstPtr&)>                              \
   {                                                                            \
@@ -84,10 +139,12 @@ int main(int argc, char** argv)
     {                                                                          \
       static_cast<TYPENAME::ConstPtr&>(current_environment) = message;         \
                                                                                \
-      const auto reaction {behaviors(current_environment)};                    \
-                                                                               \
-      const auto actuation {actuate(reaction, current_environment)};           \
-      return output(actuation);                                                \
+      return publish(                                                          \
+               actuate(                                                        \
+                 prioritized_acceleration_allocation(),                        \
+                 current_environment                                           \
+               )                                                               \
+             );                                                                \
     })                                                                         \
   )
 

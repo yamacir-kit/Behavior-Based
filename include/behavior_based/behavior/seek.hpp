@@ -12,9 +12,11 @@ namespace NAMESPACE { namespace behavior
   {
     constexpr seek() = default;
 
+    using vector_type
+      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+
     template <typename Environment>
-    auto operator()(const Environment& environment) const
-      -> typename semantics::current_velocity_traits<CurrentVelocity>::output_type
+    vector_type operator()(const Environment& environment) const
     {
       using namespace semantics;
 
