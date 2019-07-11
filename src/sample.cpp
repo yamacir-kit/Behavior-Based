@@ -8,7 +8,7 @@
 
 #include <behavior_based/actuator/vehicle.hpp>
 
-#include <behavior_based/behavior/seek.hpp>
+#include <behavior_based/behavior/variable_matching.hpp>
 
 #include <behavior_based/configure.hpp>
 

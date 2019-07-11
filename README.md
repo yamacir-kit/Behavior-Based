@@ -1,4 +1,4 @@
-# Behavior-Based Library 0.0.51
+# Behavior-Based Library 0.0.54
 
 The Behavior-Based Robotics libraries for ROS mobile robots.
 

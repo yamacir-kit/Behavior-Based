@@ -7,32 +7,26 @@
 
 namespace NAMESPACE { namespace behavior
 {
+  #define CURRENT_VELOCITY semantics::extract<CurrentVelocity>().from(environment)
+  #define TARGET semantics::extract<Target>().from(environment)
+  #define VELOCITY_MAX semantics::current_velocity_traits<CurrentVelocity>::linear_max
+
   template <typename CurrentVelocity, typename Target>
   struct seek
   {
-    constexpr seek() = default;
-
     using vector_type
       = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
 
     template <typename Environment>
     vector_type operator()(const Environment& environment) const
     {
-      using namespace semantics;
-
-      const auto current_velocity {
-        extract<CurrentVelocity>().from(environment)
-      };
-
-      const auto target {extract<Target>().from(environment).normalized()};
-
-      const auto desired_velocity {
-        target * current_velocity_traits<CurrentVelocity>::linear_max
-      };
-
-      return desired_velocity - current_velocity; // steering
+      return TARGET.normalized() * VELOCITY_MAX - CURRENT_VELOCITY;
     }
   };
+
+  #undef CURRENT_VELOCITY
+  #undef TARGET
+  #undef VELOCITY_MAX
 }} // namespace NAMESPACE::behavior
 
 #endif // INCLUDED_BEHAVIOR_BASED_BEHAVIOR_SEEK_HPP
