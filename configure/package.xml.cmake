@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- THIS FILE AUTO GENERATED FROM "configure/package.xml.cmake" -->
+
 <package format="2">
   <name>behavior_based</name>
   <version>${MAJOR}.${MINOR}.${SUBMINOR}</version>
