@@ -60,11 +60,11 @@ int main(int argc, char** argv)
         semantics::target<sensor_msgs::Joy>
       >;
 
-  using forward
-    = behavior::seek<
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::forward<Eigen::Vector2d>
-      >;
+  // using forward
+  //   = behavior::seek<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::forward<Eigen::Vector2d>
+  //     >;
 
   using avoidance
     = behavior::flee<
@@ -72,11 +72,11 @@ int main(int argc, char** argv)
         semantics::target<lgsvl_msgs::Detection3DArray>
       >;
 
-  using nop
-    = behavior::seek<
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::target<expression::unit>
-      >;
+  // using nop
+  //   = behavior::seek<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::target<expression::unit>
+  //     >;
 
   /**
    * The linear list of behaviors.
