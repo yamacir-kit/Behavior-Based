@@ -7,9 +7,10 @@
 
 namespace NAMESPACE { namespace behavior
 {
-  #define CURRENT_VELOCITY semantics::extract<CurrentVelocity>().from(environment)
-  #define TARGET semantics::extract<Target>().from(environment)
-  #define VELOCITY_MAX semantics::current_velocity_traits<CurrentVelocity>::linear_max
+  #define CURRENT_VELOCITY semantics::extract< CurrentVelocity >().from(environment)
+  #define TARGET           semantics::extract< Target          >().from(environment)
+
+  #define VELOCITY_MAX     semantics::current_velocity_traits<CurrentVelocity>::linear_max
 
   template <typename CurrentVelocity, typename Target>
   struct seek

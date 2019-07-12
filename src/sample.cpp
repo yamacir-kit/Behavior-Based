@@ -46,8 +46,7 @@ int main(int argc, char** argv)
    * almost current, allowed time delay is depend on your system).
    */
   using environment
-    = expression::list
-      <
+    = expression::list<
         lgsvl_msgs::Detection3DArray::ConstPtr,
         nav_msgs::Odometry::ConstPtr,
         sensor_msgs::Joy::ConstPtr
@@ -56,32 +55,28 @@ int main(int argc, char** argv)
   environment current_environment {};
 
   using slave
-    = behavior::seek
-      <
+    = behavior::seek<
         semantics::current_velocity<nav_msgs::Odometry>,
         semantics::target<sensor_msgs::Joy>
       >;
 
-  using forward
-    = behavior::seek
-      <
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::forward<Eigen::Vector2d>
-      >;
+  // using forward
+  //   = behavior::seek<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::forward<Eigen::Vector2d>
+  //     >;
 
   using avoidance
-    = behavior::flee
-      <
+    = behavior::flee<
         semantics::current_velocity<nav_msgs::Odometry>,
         semantics::target<lgsvl_msgs::Detection3DArray>
       >;
 
-  using nop
-    = behavior::seek
-      <
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::target<expression::unit>
-      >;
+  // using nop
+  //   = behavior::seek<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::target<expression::unit>
+  //     >;
 
   /**
    * The linear list of behaviors.
