@@ -147,6 +147,7 @@ FULL_PATH_NAMES        = YES
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
 STRIP_FROM_PATH        = "${CMAKE_CURRENT_SOURCE_DIR}/src"
+STRIP_FROM_PATH       += "${CMAKE_CURRENT_SOURCE_DIR}/include"
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -155,7 +156,7 @@ STRIP_FROM_PATH        = "${CMAKE_CURRENT_SOURCE_DIR}/src"
 # specify the list of include paths that are normally passed to the compiler
 # using the -I flag.
 
-STRIP_FROM_INC_PATH    = "${CMAKE_CURRENT_SOURCE_DIR}/include"
+STRIP_FROM_INC_PATH    =
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
