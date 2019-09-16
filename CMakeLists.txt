@@ -124,6 +124,16 @@ if(EXISTS ${${PROJECT_NAME}_CONFIGURE}/README.md.cmake)
 endif()
 
 # ==============================================================================
+#   Configure Doxyfile
+# ==============================================================================
+set(${PROJECT_NAME}_CONFIGURE ${CMAKE_CURRENT_SOURCE_DIR}/configure)
+if(EXISTS ${${PROJECT_NAME}_CONFIGURE}/doxyfile.cmake)
+  configure_file(
+    ${${PROJECT_NAME}_CONFIGURE}/doxyfile.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/doxyfile)
+endif()
+
+# ==============================================================================
 #   Main
 # ==============================================================================
 include_directories(
