@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_UTILITY_DEMANGLE_HPP
-#define INCLUDED_BEHAVIOR_BASED_UTILITY_DEMANGLE_HPP
+#ifndef INCLUDED_BEHAVIORS_UTILITY_DEMANGLE_HPP
+#define INCLUDED_BEHAVIORS_UTILITY_DEMANGLE_HPP
 
 #include <cstdlib>
 #include <memory>
@@ -8,9 +8,7 @@
 
 #include <cxxabi.h>
 
-#include <behavior_based/configure.hpp>
-
-namespace NAMESPACE { namespace utility
+namespace behaviors { namespace utility
 {
   std::string demangle(const char* name)
   {
@@ -29,7 +27,7 @@ namespace NAMESPACE { namespace utility
   {
     return demangle(info.name());
   }
-}} // namespace NAMESPACE::utility
+}} // namespace behaviors::utility
 
-#endif // INCLUDED_BEHAVIOR_BASED_UTILITY_DEMANGLE_HPP
+#endif // INCLUDED_BEHAVIORS_UTILITY_DEMANGLE_HPP
 

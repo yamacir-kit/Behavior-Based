@@ -6,23 +6,23 @@
 #include <sensor_msgs/Joy.h>
 #include <lgsvl_msgs/Detection3DArray.h>
 
-#include <behavior_based/actuator/vehicle.hpp>
+#include <behaviors/actuator/vehicle.hpp>
 
-#include <behavior_based/behavior/variable_matching.hpp>
+#include <behaviors/behavior/variable_matching.hpp>
 
-#include <behavior_based/configure.hpp>
+#include <behaviors/configure.hpp>
 
-#include <behavior_based/expression/dispatch.hpp>
-#include <behavior_based/expression/fold.hpp>
-#include <behavior_based/expression/list.hpp>
+#include <behaviors/expression/dispatch.hpp>
+#include <behaviors/expression/fold.hpp>
+#include <behaviors/expression/list.hpp>
 
-#include <behavior_based/geometry/angle.hpp>
+#include <behaviors/geometry/angle.hpp>
 
-#include <behavior_based/semantics/current_velocity.hpp>
-#include <behavior_based/semantics/forward.hpp>
-#include <behavior_based/semantics/target.hpp>
+#include <behaviors/semantics/current_velocity.hpp>
+#include <behaviors/semantics/forward.hpp>
+#include <behaviors/semantics/target.hpp>
 
-#include <behavior_based/utility/demangle.hpp>
+#include <behaviors/utility/demangle.hpp>
 
 /**
  * FAQ
@@ -33,9 +33,9 @@
 
 int main(int argc, char** argv)
 {
-  using namespace behavior_based;
+  using namespace behaviors;
 
-  ros::init(argc, argv, configure::project_name);
+  ros::init(argc, argv, "sample");
 
   ros::NodeHandle handle {"~"};
 

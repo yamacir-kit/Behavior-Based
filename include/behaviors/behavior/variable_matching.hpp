@@ -1,11 +1,10 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_BEHAVIOR_SEEK_HPP
-#define INCLUDED_BEHAVIOR_BASED_BEHAVIOR_SEEK_HPP
+#ifndef INCLUDED_BEHAVIORS_BEHAVIOR_SEEK_HPP
+#define INCLUDED_BEHAVIORS_BEHAVIOR_SEEK_HPP
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/semantics/extractor.hpp>
-#include <behavior_based/semantics/current_velocity.hpp>
+#include <behaviors/semantics/extractor.hpp>
+#include <behaviors/semantics/current_velocity.hpp>
 
-namespace NAMESPACE { namespace behavior
+namespace behaviors { namespace behavior
 {
   #define CURRENT_VELOCITY semantics::extract< CurrentVelocity >().from(environment)
   #define TARGET           semantics::extract< Target          >().from(environment)
@@ -41,7 +40,7 @@ namespace NAMESPACE { namespace behavior
   #undef CURRENT_VELOCITY
   #undef TARGET
   #undef VELOCITY_MAX
-}} // namespace NAMESPACE::behavior
+}} // namespace behaviors::behavior
 
-#endif // INCLUDED_BEHAVIOR_BASED_BEHAVIOR_SEEK_HPP
+#endif // INCLUDED_BEHAVIORS_BEHAVIOR_SEEK_HPP
 

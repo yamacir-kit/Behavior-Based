@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_ACTUATOR_VEHICLE_HPP
-#define INCLUDED_BEHAVIOR_BASED_ACTUATOR_VEHICLE_HPP
+#ifndef INCLUDED_BEHAVIORS_ACTUATOR_VEHICLE_HPP
+#define INCLUDED_BEHAVIORS_ACTUATOR_VEHICLE_HPP
 
 #include <cmath>
 
@@ -7,12 +7,11 @@
 
 #include <autoware_msgs/VehicleCmd.h>
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/geometry/angle.hpp>
-#include <behavior_based/semantics/extractor.hpp>
-#include <behavior_based/semantics/current_velocity.hpp>
+#include <behaviors/geometry/angle.hpp>
+#include <behaviors/semantics/extractor.hpp>
+#include <behaviors/semantics/current_velocity.hpp>
 
-namespace NAMESPACE { namespace actuator
+namespace behaviors { namespace actuator
 {
   template <typename...>
   struct vehicle;
@@ -56,7 +55,7 @@ namespace NAMESPACE { namespace actuator
       return command;
     }
   };
-}} // namespace NAMESPACE::actuator
+}} // namespace behaviors::actuator
 
-#endif // INCLUDED_BEHAVIOR_BASED_ACTUATOR_VEHICLE_HPP
+#endif // INCLUDED_BEHAVIORS_ACTUATOR_VEHICLE_HPP
 
