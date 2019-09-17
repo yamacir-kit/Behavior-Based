@@ -23,11 +23,9 @@ endif()
 # ==============================================================================
 #   Configure Package.xml
 # ==============================================================================
-set(${PROJECT_NAME}_CONFIGURE ${CMAKE_CURRENT_SOURCE_DIR}/configure)
-
-if(EXISTS ${${PROJECT_NAME}_CONFIGURE}/package.xml.cmake)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake)
   configure_file(
-    ${${PROJECT_NAME}_CONFIGURE}/package.xml.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/package.xml)
 endif()
 
@@ -107,20 +105,29 @@ if(EXISTS ${${PROJECT_NAME}_INCLUDE})
     CATKIN_DEPENDS ${PACKAGE_DEPENDS})
 endif()
 
-if(EXISTS ${${PROJECT_NAME}_CONFIGURE}/configure.hpp.cmake)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake)
   string(TIMESTAMP ${PROJECT_NAME}_TIMESTAMP "%Y/%m/%d %H:%M:%S")
   configure_file(
-    ${${PROJECT_NAME}_CONFIGURE}/configure.hpp.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake
     ${${PROJECT_NAME}_INCLUDE}/${PROJECT_NAME}/configure.hpp)
 endif()
 
 # ==============================================================================
 #   Configure README
 # ==============================================================================
-if(EXISTS ${${PROJECT_NAME}_CONFIGURE}/README.md.cmake)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md.cmake)
   configure_file(
-    ${${PROJECT_NAME}_CONFIGURE}/README.md.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/README.md.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+endif()
+
+# ==============================================================================
+#   Configure Doxyfile
+# ==============================================================================
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/doxyfile.cmake)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/configure/doxyfile.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/doxyfile)
 endif()
 
 # ==============================================================================

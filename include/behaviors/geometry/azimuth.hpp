@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_GEOMETRY_AZIMUTH_HPP
-#define INCLUDED_BEHAVIOR_BASED_GEOMETRY_AZIMUTH_HPP
+#ifndef INCLUDED_BEHAVIORS_GEOMETRY_AZIMUTH_HPP
+#define INCLUDED_BEHAVIORS_GEOMETRY_AZIMUTH_HPP
 
 #include <cmath>
 
@@ -9,10 +9,9 @@
 
 #include <sensor_msgs/NavSatFix.h>
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/geometry/distance.hpp>
+#include <behaviors/geometry/distance.hpp>
 
-namespace NAMESPACE { namespace geometry
+namespace behaviors { namespace geometry
 {
   // 国土地理院あたりからパクってきた数式なのは覚えてるが詳細は忘れた。
   // これ自体が正しいことは確認済み
@@ -43,7 +42,7 @@ namespace NAMESPACE { namespace geometry
       -std::cos(phi) * d
     };
   }
-}} // namespace NAMESPACE::geometry
+}} // namespace behaviors::geometry
 
-#endif // INCLUDED_BEHAVIOR_BASED_GEOMETRY_AZIMUTH_HPP
+#endif // INCLUDED_BEHAVIORS_GEOMETRY_AZIMUTH_HPP
 

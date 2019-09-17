@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
-#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
+#define INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
 
 #include <cmath>
 
@@ -11,12 +11,11 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TwistStamped.h>
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/expression/list.hpp>
-#include <behavior_based/semantics/define.hpp>
-#include <behavior_based/semantics/facade.hpp>
+#include <behaviors/expression/list.hpp>
+#include <behaviors/semantics/define.hpp>
+#include <behaviors/semantics/facade.hpp>
 
-namespace NAMESPACE { namespace semantics
+namespace behaviors { namespace semantics
 {
   DEFINE_SEMANTICS_CATEGORY(current_velocity, vector_type::Zero());
 
@@ -38,7 +37,7 @@ namespace NAMESPACE { namespace semantics
       std::cos(message->angular.z),
       std::sin(message->angular.z)
     } * message->linear.x;
-  });
+  })
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::TwistStamped,
   {
@@ -46,7 +45,7 @@ namespace NAMESPACE { namespace semantics
       std::cos(message->twist.angular.z),
       std::sin(message->twist.angular.z)
     } * message->twist.linear.x;
-  });
+  })
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, nav_msgs::Odometry,
   {
@@ -54,8 +53,8 @@ namespace NAMESPACE { namespace semantics
       std::cos(message->twist.twist.angular.z),
       std::sin(message->twist.twist.angular.z)
     } * message->twist.twist.linear.x;
-  });
-}} // namespace NAMESPACE::semantics
+  })
+}} // namespace behaviors::semantics
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_CURRENT_VELOCITY_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
 

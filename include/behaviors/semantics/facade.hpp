@@ -1,11 +1,9 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_FACADE_HPP
-#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_FACADE_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_FACADE_HPP
+#define INCLUDED_BEHAVIORS_SEMANTICS_FACADE_HPP
 
 #include <Eigen/Core>
 
-#include <behavior_based/configure.hpp>
-
-namespace NAMESPACE { namespace semantics
+namespace behaviors { namespace semantics
 {
   template <template <typename...> typename Category, typename Message>
   struct facade
@@ -32,7 +30,7 @@ namespace NAMESPACE { namespace semantics
       return operator()(std::forward<Ts>(xs)...);
     }
   };
-}} // namespace NAMESPACE::semantics
+}} // namespace behaviors::semantics
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_FACADE_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_FACADE_HPP
 

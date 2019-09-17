@@ -1,6 +1,6 @@
-# Behavior-Based Library ${PROJECT_VERSION}
+# Behaviors C++ Library ${PROJECT_VERSION}
 
-The Behavior-Based Robotics libraries for ROS mobile robots.
+The behavior-based robotics library for ROS mobiligence.
 
 ## System Requirements
 
