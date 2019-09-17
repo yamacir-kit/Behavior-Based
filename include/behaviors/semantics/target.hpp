@@ -21,7 +21,7 @@ namespace behaviors { namespace semantics
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
     return {message->axes[1], message->axes[2]};
-  });
+  })
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, lgsvl_msgs::Detection3DArray,
   {
@@ -83,7 +83,7 @@ namespace behaviors { namespace semantics
     {
       return vector_type::Zero();
     }
-  });
+  })
 }} // namespace behaviors::semantics
 
 #endif // INCLUDED_BEHAVIORS_SEMANTICS_TARGET_HPP

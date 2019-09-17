@@ -37,7 +37,7 @@ namespace behaviors { namespace semantics
       std::cos(message->angular.z),
       std::sin(message->angular.z)
     } * message->linear.x;
-  });
+  })
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::TwistStamped,
   {
@@ -45,7 +45,7 @@ namespace behaviors { namespace semantics
       std::cos(message->twist.angular.z),
       std::sin(message->twist.angular.z)
     } * message->twist.linear.x;
-  });
+  })
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, nav_msgs::Odometry,
   {
@@ -53,7 +53,7 @@ namespace behaviors { namespace semantics
       std::cos(message->twist.twist.angular.z),
       std::sin(message->twist.twist.angular.z)
     } * message->twist.twist.linear.x;
-  });
+  })
 }} // namespace behaviors::semantics
 
 #endif // INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
