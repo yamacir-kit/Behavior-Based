@@ -3,11 +3,11 @@
 <!-- THIS FILE AUTO GENERATED FROM configure/package.xml.cmake -->
 
 <package format="2">
-  <name>behavior_based</name>
+  <name>behaviors</name>
   <version>${MAJOR}.${MINOR}.${PATCH}</version>
 
   <description>
-    Behavior-based robotics libraries for ROS.
+    Behavior-based robotics library for ROS.
   </description>
 
   <maintainer email="httperror@404-notfound.jp">
