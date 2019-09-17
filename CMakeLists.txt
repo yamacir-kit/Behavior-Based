@@ -95,7 +95,7 @@ if(${PROJECT_NAME}_MESSAGES OR ${PROJECT_NAME}_SERVICES OR ${PROJECT_NAME}_ACTIO
 endif()
 
 # ==============================================================================
-#   Configure Header
+#   Catkin Package
 # ==============================================================================
 set(${PROJECT_NAME}_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -105,8 +105,20 @@ if(EXISTS ${${PROJECT_NAME}_INCLUDE})
     CATKIN_DEPENDS ${PACKAGE_DEPENDS})
 endif()
 
+# ==============================================================================
+#   Configure Header
+# ==============================================================================
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
+  execute_process(
+    COMMAND git rev-parse HEAD
+    COMMAND tr -d "\n"
+    OUTPUT_VARIABLE ${PROJECT_NAME}_BUILD_HASH)
+else()
+  set(${PROJECT_NAME}_BUILD_HASH "")
+endif()
+
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake)
-  string(TIMESTAMP ${PROJECT_NAME}_TIMESTAMP "%Y/%m/%d %H:%M:%S")
+  string(TIMESTAMP ${PROJECT_NAME}_BUILD_TIME "%Y/%m/%d %H:%M:%S")
   configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/configure/configure.hpp.cmake
     ${${PROJECT_NAME}_INCLUDE}/${PROJECT_NAME}/configure.hpp)

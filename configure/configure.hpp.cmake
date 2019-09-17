@@ -11,7 +11,8 @@ namespace behaviors { namespace configure
 {
   static const std::string project_name {"${PROJECT_NAME}"};
 
-  static const std::string build_time {"${${PROJECT_NAME}_TIMESTAMP}"};
+  static const std::string build_hash {"${${PROJECT_NAME}_BUILD_HASH}"};
+  static const std::string build_time {"${${PROJECT_NAME}_BUILD_TIME}"};
   static const std::string build_type {"${CMAKE_BUILD_TYPE}"};
 
   static const struct version

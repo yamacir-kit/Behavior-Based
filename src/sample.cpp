@@ -34,14 +34,14 @@ int main(int argc, char** argv)
   using namespace behaviors;
 
   const std::string program_name {"sample"};
-
   {
     using namespace configure;
 
     std::cerr << "; " << project_name << " " << program_name << " - Version " << version.major << " Revision " << version.minor << " Patch " << version.patch << "\n"
               << ";\n"
               << "; configuration ; " << build_type << "\n"
-              << "; timestamp\t; " << build_time << "\n"
+              << "; source-hash\t; " << build_hash << "\n"
+              << "; compiled-at\t; " << build_time << "\n"
               << std::endl;
   } // using namespace configure
 

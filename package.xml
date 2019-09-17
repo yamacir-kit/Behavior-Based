@@ -4,7 +4,7 @@
 
 <package format="2">
   <name>behaviors</name>
-  <version>0.0.80</version>
+  <version>0.0.81</version>
 
   <description>
     Behavior-based robotics library for ROS.
