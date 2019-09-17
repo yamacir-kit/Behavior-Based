@@ -1,13 +1,9 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_EXPRESSION_LIST_HPP
-#define INCLUDED_BEHAVIOR_BASED_EXPRESSION_LIST_HPP
+#ifndef INCLUDED_BEHAVIORS_EXPRESSION_LIST_HPP
+#define INCLUDED_BEHAVIORS_EXPRESSION_LIST_HPP
 
 #include <type_traits>
 
-#include <behavior_based/configure.hpp>
-
-// XXX 線形リスト前提のペア型という点で少し歪な存在
-
-namespace NAMESPACE { namespace expression
+namespace behaviors { namespace expression
 {
   template <typename...>
   struct list;
@@ -68,7 +64,7 @@ namespace NAMESPACE { namespace expression
   {
     return {std::forward<Ts>(xs)...};
   }
-}} // namespace NAMESPACE::expression
+}} // namespace behaviors::expression
 
-#endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_LIST_HPP
+#endif // INCLUDED_BEHAVIORS_EXPRESSION_LIST_HPP
 

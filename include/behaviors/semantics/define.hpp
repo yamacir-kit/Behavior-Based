@@ -1,10 +1,10 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_DEFINE_HPP
-#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_DEFINE_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_DEFINE_HPP
+#define INCLUDED_BEHAVIORS_SEMANTICS_DEFINE_HPP
 
 #include <utility>
 
-#include <behavior_based/expression/list.hpp>
-#include <behavior_based/semantics/facade.hpp>
+#include <behaviors/expression/list.hpp>
+#include <behaviors/semantics/facade.hpp>
 
 #define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_VECTOR)               \
                                                                                \
@@ -41,5 +41,5 @@ struct CATEGORY<TYPE>                                                          \
 };
 
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_DEFINE_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_DEFINE_HPP
 

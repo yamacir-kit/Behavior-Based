@@ -1,12 +1,10 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_EXPRESSION_DISPATCH_HPP
-#define INCLUDED_BEHAVIOR_BASED_EXPRESSION_DISPATCH_HPP
+#ifndef INCLUDED_BEHAVIORS_EXPRESSION_DISPATCH_HPP
+#define INCLUDED_BEHAVIORS_EXPRESSION_DISPATCH_HPP
 
 #include <type_traits>
 #include <utility>
 
-#include <behavior_based/configure.hpp>
-
-namespace NAMESPACE { namespace expression
+namespace behaviors { namespace expression
 {
   template <typename...>
   struct dispatcher;
@@ -42,7 +40,7 @@ namespace NAMESPACE { namespace expression
   {
     return {std::forward<Fs>(fs)...};
   }
-}} // namespace NAMESPACE::expression
+}} // namespace behaviors::expression
 
-#endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_DISPATCH_HPP
+#endif // INCLUDED_BEHAVIORS_EXPRESSION_DISPATCH_HPP
 

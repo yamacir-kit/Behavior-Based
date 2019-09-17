@@ -1,9 +1,8 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_FORWARD_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_FORWARD_HPP
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/semantics/facade.hpp>
+#include <behaviors/semantics/facade.hpp>
 
-namespace NAMESPACE { namespace semantics
+namespace behaviors { namespace semantics
 {
   DEFINE_SEMANTICS_CATEGORY(forward, vector_type::Zero());
 
@@ -23,7 +22,7 @@ namespace NAMESPACE { namespace semantics
       return Vector::UnitX();
     }
   };
-}} // namespace NAMESPACE::semantics
+}} // namespace behaviors::semantics
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_FORWARD_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_FORWARD_HPP
 

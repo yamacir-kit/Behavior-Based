@@ -1,15 +1,14 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_SEMANTICS_TARGET_HPP
-#define INCLUDED_BEHAVIOR_BASED_SEMANTICS_TARGET_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_TARGET_HPP
+#define INCLUDED_BEHAVIORS_SEMANTICS_TARGET_HPP
 
 #include <algorithm>
 
 #include <lgsvl_msgs/Detection3DArray.h>
 #include <sensor_msgs/Joy.h>
 
-#include <behavior_based/configure.hpp>
-#include <behavior_based/semantics/define.hpp>
+#include <behaviors/semantics/define.hpp>
 
-namespace NAMESPACE { namespace semantics
+namespace behaviors { namespace semantics
 {
   DEFINE_SEMANTICS_CATEGORY(target, vector_type::Zero());
 
@@ -85,7 +84,7 @@ namespace NAMESPACE { namespace semantics
       return vector_type::Zero();
     }
   });
-}} // namespace NAMESPACE::semantics
+}} // namespace behaviors::semantics
 
-#endif // INCLUDED_BEHAVIOR_BASED_SEMANTICS_TARGET_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_TARGET_HPP
 

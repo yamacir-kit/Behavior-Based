@@ -1,11 +1,9 @@
-#ifndef INCLUDED_BEHAVIOR_BASED_EXPRESSION_FOLD_HPP
-#define INCLUDED_BEHAVIOR_BASED_EXPRESSION_FOLD_HPP
+#ifndef INCLUDED_BEHAVIORS_EXPRESSION_FOLD_HPP
+#define INCLUDED_BEHAVIORS_EXPRESSION_FOLD_HPP
 
 #include <utility>
 
-#include <behavior_based/configure.hpp>
-
-namespace NAMESPACE { namespace expression
+namespace behaviors { namespace expression
 {
   template <typename T, typename Initial, typename BinaryOperation>
   constexpr decltype(auto) fold_left(const list<T>& list, Initial&& initial, BinaryOperation&& operation)
@@ -25,7 +23,7 @@ namespace NAMESPACE { namespace expression
 
     return fold_left(cdr(list), lhs, std::forward<BinaryOperation>(operation));
   }
-}} // namespace NAMESPACE::expression
+}} // namespace behaviors::expression
 
-#endif // INCLUDED_BEHAVIOR_BASED_EXPRESSION_FOLD_HPP
+#endif // INCLUDED_BEHAVIORS_EXPRESSION_FOLD_HPP
 
