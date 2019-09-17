@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<!-- THIS FILE AUTO GENERATED FROM /home/yamasa/works_/autoware.ai/src/behavior_based/configure/package.xml.cmake -->
+<!-- THIS FILE AUTO GENERATED FROM configure/package.xml.cmake -->
 
 <package format="2">
   <name>behavior_based</name>
-  <version>0.0.71</version>
+  <version>0.0.72</version>
 
   <description>
     Behavior-based robotics libraries for ROS.

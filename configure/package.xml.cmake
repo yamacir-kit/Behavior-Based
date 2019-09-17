@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- THIS FILE AUTO GENERATED FROM ${CMAKE_CURRENT_SOURCE_DIR}/configure/package.xml.cmake -->
+<!-- THIS FILE AUTO GENERATED FROM configure/package.xml.cmake -->
 
 <package format="2">
   <name>behavior_based</name>
