@@ -93,8 +93,8 @@ int main(int argc, char** argv)
    *
    * A folded output of each behaviors are dispatched by its type and published.
    * The dispatcher element takes a ROS message type and is responsible for
-   * publishing the message. If your system does not rely on ROS, you can
-   * send data to drivers or actuators in a framework-dependent way.
+   * publishing the message. If your system does not rely on ROS, you can send
+   * data to drivers or actuators in a framework-dependent way.
    *
    * This dispatcher is provided for cases where this library is used to
    * describe MIMO systems. For the MISO system, it is sufficient to simply give
