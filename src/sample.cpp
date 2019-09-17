@@ -22,8 +22,6 @@
 #include <behaviors/semantics/forward.hpp>
 #include <behaviors/semantics/target.hpp>
 
-#include <behaviors/utility/demangle.hpp>
-
 /**
  * FAQ
  *
@@ -35,7 +33,19 @@ int main(int argc, char** argv)
 {
   using namespace behaviors;
 
-  ros::init(argc, argv, "sample");
+  const std::string program_name {"sample"};
+
+  {
+    using namespace configure;
+
+    std::cerr << "; " << project_name << " " << program_name << " - Version " << version.major << " Revision " << version.minor << " Patch " << version.patch << "\n"
+              << ";\n"
+              << "; configuration ; " << build_type << "\n"
+              << "; timestamp\t; " << build_time << "\n"
+              << std::endl;
+  } // using namespace configure
+
+  ros::init(argc, argv, program_name);
 
   ros::NodeHandle handle {"~"};
 
