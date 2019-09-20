@@ -20,8 +20,18 @@
 
   <depend>autoware_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>lanelet2_core</depend>
+  <depend>lanelet2_extension</depend>
+  <depend>lanelet2_io</depend>
+  <depend>lanelet2_maps</depend>
+  <depend>lanelet2_msgs</depend>
+  <depend>lanelet2_projection</depend>
+  <depend>lanelet2_routing</depend>
+  <depend>lanelet2_traffic_rules</depend>
+  <depend>lanelet2_validation</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
 </package>
 

@@ -6,18 +6,19 @@
 #include <sensor_msgs/Joy.h>
 #include <lgsvl_msgs/Detection3DArray.h>
 
+#include <lanelet2_core/primitives/Lanelet.h>
+#include <lanelet2_extension/projection/mgrs_projector.h>
+#include <lanelet2_extension/regulatory_elements/autoware_traffic_light.h>
+#include <lanelet2_io/Io.h>
+#include <lanelet2_projection/UTM.h>
+
 #include <behaviors/actuator/vehicle.hpp>
-
 #include <behaviors/behavior/variable_matching.hpp>
-
 #include <behaviors/configure.hpp>
-
 #include <behaviors/expression/dispatch.hpp>
 #include <behaviors/expression/fold.hpp>
 #include <behaviors/expression/list.hpp>
-
 #include <behaviors/geometry/angle.hpp>
-
 #include <behaviors/semantics/current_velocity.hpp>
 #include <behaviors/semantics/forward.hpp>
 #include <behaviors/semantics/target.hpp>
@@ -48,6 +49,13 @@ int main(int argc, char** argv)
   ros::init(argc, argv, program_name);
 
   ros::NodeHandle handle {"~"};
+
+  lanelet::GPSPoint point {49.0, 8.4};
+  lanelet::Origin origin {point};
+  lanelet::ErrorMessages error {};
+  lanelet::projection::UtmProjector projector {origin, true, false};
+
+  auto map {lanelet::load("/home/yamasa/Downloads/lanelet2.osm", "osm_handler", projector, &error)};
 
   /**
    * The environment is set of sensor data.
