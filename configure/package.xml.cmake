@@ -18,13 +18,13 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>autoware_lanelet2_msgs</depend>
   <depend>autoware_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>lanelet2_core</depend>
   <depend>lanelet2_extension</depend>
   <depend>lanelet2_io</depend>
   <depend>lanelet2_maps</depend>
-  <depend>lanelet2_msgs</depend>
   <depend>lanelet2_projection</depend>
   <depend>lanelet2_routing</depend>
   <depend>lanelet2_traffic_rules</depend>
