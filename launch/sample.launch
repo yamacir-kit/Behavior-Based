@@ -1,0 +1,12 @@
+<launch>
+  <node name="joy_node" pkg="joy" type="joy_node" respawn="true">
+    <param name="dev" value="/dev/input/js0"/>
+    <param name="deadzone" value="0.12"/>
+    <param name="autorepeat_rate" value="25"/>
+  </node>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+  <node name="sample_behaviors" pkg="behaviors" type="sample"/>
+</launch>
+

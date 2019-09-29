@@ -143,12 +143,12 @@ int main(int argc, char** argv)
   {
     auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
     {
-      auto strategic_importance = [&](const auto& v)
+      auto importance_of = [&](const auto& v)
       {
         return geometry::angle(Eigen::Vector2d::UnitX(), v) / boost::math::constants::pi<double>();
       };
 
-      return a + (1.0 - strategic_importance(a)) * b(current_environment);
+      return a + (1.0 - importance_of(a)) * b(current_environment);
     };
 
     return expression::fold_left(behaviors, Eigen::Vector2d::Zero(), allocate);

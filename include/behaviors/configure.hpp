@@ -12,7 +12,7 @@ namespace behaviors { namespace configure
   static const std::string project_name {"behaviors"};
 
   static const std::string build_hash {""};
-  static const std::string build_time {"2019/09/20 16:49:24"};
+  static const std::string build_time {"2019/09/29 23:39:01"};
   static const std::string build_type {"Release"};
 
   static const struct version
@@ -25,8 +25,8 @@ namespace behaviors { namespace configure
 
     const std::string major {"0"},
                       minor {"0"},
-                      patch {"83"};
-  } version {"0.0.83"};
+                      patch {"84"};
+  } version {"0.0.84"};
 }} // namespace behaviors::configure
 
 #endif // INCLUDED_BEHAVIORS_CONFIGURE_HPP
