@@ -84,11 +84,11 @@ int main(int argc, char** argv)
   //       semantics::forward<Eigen::Vector2d>
   //     >;
 
-  using avoidance
-    = behavior::flee<
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::target<lgsvl_msgs::Detection3DArray>
-      >;
+  // using avoidance
+  //   = behavior::flee<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::target<lgsvl_msgs::Detection3DArray>
+  //     >;
 
   // using nop
   //   = behavior::seek<
@@ -104,7 +104,10 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  expression::list<slave, avoidance> behaviors {};
+  expression::list<
+    slave
+  // , avoidance
+  > behaviors {};
 
   /**
    * Message publisher dispatcher.

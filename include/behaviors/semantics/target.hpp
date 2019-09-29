@@ -7,6 +7,8 @@
 #include <sensor_msgs/Joy.h>
 
 #include <behaviors/semantics/define.hpp>
+#include <behaviors/utility/demangle.hpp>
+#include <behaviors/utility/print.hpp>
 
 namespace behaviors { namespace semantics
 {

@@ -6,18 +6,17 @@
 #include <behaviors/expression/list.hpp>
 #include <behaviors/semantics/facade.hpp>
 
-#define DEFINE_SEMANTICS_CATEGORY(CATEGORY_NAME, DEFAULT_VECTOR)               \
-                                                                               \
+#ifndef NDEBUG
+#define DEFINE_SEMANTICS_CATEGORY(CATEGORY, DEFAULT_VECTOR)                    \
 template <typename...>                                                         \
-struct CATEGORY_NAME;                                                          \
-                                                                               \
+struct CATEGORY;                                                               \
 template <>                                                                    \
-struct CATEGORY_NAME<expression::unit>                                         \
-  : public facade<CATEGORY_NAME, expression::unit>                             \
+struct CATEGORY<expression::unit>                                              \
+  : public facade<CATEGORY, expression::unit>                                  \
   , public expression::unit                                                    \
 {                                                                              \
   template <typename... Ts>                                                    \
-  constexpr CATEGORY_NAME(Ts&&... xs)                                          \
+  constexpr CATEGORY(Ts&&... xs)                                               \
     : expression::unit {std::forward<Ts>(xs)...}                               \
   {}                                                                           \
                                                                                \
@@ -27,8 +26,36 @@ struct CATEGORY_NAME<expression::unit>                                         \
     return DEFAULT_VECTOR;                                                     \
   }                                                                            \
 }
+#else // NDEBUG
+#define DEFINE_SEMANTICS_CATEGORY(CATEGORY, DEFAULT_VECTOR)                    \
+template <typename...>                                                         \
+struct CATEGORY;                                                               \
+template <>                                                                    \
+struct CATEGORY<expression::unit>                                              \
+  : public facade<CATEGORY, expression::unit>                                  \
+  , public expression::unit                                                    \
+{                                                                              \
+  template <typename... Ts>                                                    \
+  constexpr CATEGORY(Ts&&... xs)                                               \
+    : expression::unit {std::forward<Ts>(xs)...}                               \
+  {}                                                                           \
+                                                                               \
+  template <typename... Ts>                                                    \
+  decltype(auto) operator()(Ts&&...) const noexcept                            \
+  {                                                                            \
+    std::cerr << ";\n"                                                         \
+              << "; semantics\t; category " << #CATEGORY << std::endl;         \
+    std::cerr << ";\t\t; invoked default value!\n"                             \
+              << ";\t\t; two situations are possible;\n"                       \
+              << ";\t\t;   (1) the message has not been accepted (a.k.a meessage == nullptr)\n" \
+              << ";\t\t;   (2) called explicitly (in many cases, meaning no action is required)" << std::endl; \
+    return DEFAULT_VECTOR;                                                     \
+  }                                                                            \
+}
+#endif // NDEBUG
 
 
+#ifndef NDEBUG
 #define DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(CATEGORY, TYPE, ...)          \
 template <>                                                                    \
 struct CATEGORY<TYPE>                                                          \
@@ -39,6 +66,21 @@ struct CATEGORY<TYPE>                                                          \
     if (message) __VA_ARGS__ else return CATEGORY<expression::unit> {}();      \
   }                                                                            \
 };
+#else // NDEBUG
+#define DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(CATEGORY, TYPE, ...)          \
+template <>                                                                    \
+struct CATEGORY<TYPE>                                                          \
+  : public facade<CATEGORY, TYPE>                                              \
+{                                                                              \
+  vector_type operator()(const TYPE::ConstPtr& message) const                  \
+  {                                                                            \
+    std::cerr << ";\n"                                                         \
+              << "; semantics\t; category " << #CATEGORY << std::endl;         \
+    std::cerr << ";\t\t; specialized for " << #TYPE << std::endl;              \
+    if (message) __VA_ARGS__ else return CATEGORY<expression::unit> {}();      \
+  }                                                                            \
+};
+#endif // NDEBUG
 
 
 #endif // INCLUDED_BEHAVIORS_SEMANTICS_DEFINE_HPP
