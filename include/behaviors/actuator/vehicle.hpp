@@ -32,7 +32,8 @@ namespace behaviors { namespace actuator
     template <typename Environment>
     auto operator()(const vector_type& steering, const Environment& environment) const
     {
-      std::cerr << "; vehicle\t; specialized for " << utility::demangle(typeid(CurrentVelocity)) << std::endl;
+      std::cerr << ";\n"
+                << "; vehicle\t; specialized for " << utility::demangle(typeid(CurrentVelocity)) << std::endl;
 
       const auto current_velocity {
         semantics::extract<CurrentVelocity>().from(environment)
@@ -40,8 +41,10 @@ namespace behaviors { namespace actuator
       PRINT_VECTOR2D(current_velocity);
 
       const auto desired_velocity {current_velocity + steering};
+      PRINT_VECTOR2D(desired_velocity);
 
       const auto angle {geometry::angle(Eigen::Vector2d::UnitX(), desired_velocity)};
+      PRINT_VALUE(angle);
 
       autoware_msgs::VehicleCmd command {};
 
@@ -49,11 +52,13 @@ namespace behaviors { namespace actuator
 
       command.twist_cmd.twist.linear.x
         = desired_velocity.norm(); // * std::max(std::cos(angle), 0.0);
+      PRINT_VALUE(command.twist_cmd.twist.linear.x);
 
       command.twist_cmd.twist.angular.z
         = boost::math::sign(desired_velocity[1])
           * angle
           * (angular_velocity_max / boost::math::constants::pi<double>());
+      PRINT_VALUE(command.twist_cmd.twist.angular.z);
 
       command.twist_cmd.header.stamp = ros::Time::now();
 
