@@ -5,7 +5,7 @@
     <param name="autorepeat_rate" value="25"/>
   </node>
 
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+  <!-- <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/> -->
 
   <node name="sample_behaviors" pkg="behaviors" type="sample"/>
 </launch>

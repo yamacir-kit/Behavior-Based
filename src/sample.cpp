@@ -30,6 +30,29 @@
  * A. Because C++ not allows partial specialization of function.
  */
 
+#define DEFINE_SLOT(TYPE, NAME)                                                \
+struct NAME                                                                    \
+  : public TYPE::ConstPtr                                                      \
+{                                                                              \
+  using message_type = TYPE;                                                   \
+                                                                               \
+  template <typename... Ts>                                                    \
+  explicit NAME(Ts&&... operands)                                              \
+    : TYPE::ConstPtr {std::forward<decltype(operands)>(operands)...}           \
+  {}                                                                           \
+                                                                               \
+  NAME& operator=(const TYPE::ConstPtr& rhs) &                                 \
+  {                                                                            \
+    static_cast<TYPE::ConstPtr&>(*this) = rhs;                                 \
+    return *this;                                                              \
+  }                                                                            \
+}
+
+DEFINE_SLOT(geometry_msgs::PoseStamped, goal_slot);
+DEFINE_SLOT(geometry_msgs::PoseStamped, predict_slot);
+DEFINE_SLOT(nav_msgs::Odometry, odometry_slot);
+DEFINE_SLOT(sensor_msgs::Joy, joy_slot);
+
 int main(int argc, char** argv)
 {
   using namespace behaviors;
@@ -65,9 +88,10 @@ int main(int argc, char** argv)
    */
   using environment
     = expression::list<
-        lgsvl_msgs::Detection3DArray::ConstPtr,
-        nav_msgs::Odometry::ConstPtr,
-        sensor_msgs::Joy::ConstPtr
+        goal_slot,
+        joy_slot,
+        odometry_slot,
+        predict_slot
       >;
 
   environment current_environment {};
@@ -154,8 +178,6 @@ int main(int argc, char** argv)
               << ";   Prioritized Acceleration Allocation" << "\n"
               << "; " << std::string(78, '-') << std::endl;
 
-    std::size_t depth {0};
-
     auto allocate = [&](const auto& a, const auto& b) mutable
       -> Eigen::Vector2d
     {
@@ -173,14 +195,14 @@ int main(int argc, char** argv)
   #define CALLBACK(TYPENAME, ...)                                              \
   std::function<void (const TYPENAME::ConstPtr&)>                              \
   {                                                                            \
-    [&](auto&& message) __VA_ARGS__                                            \
+    [&](auto&& message) mutable __VA_ARGS__                                    \
   }
 
-  #define CONNECT(TYPENAME, TOPICNAME)                                         \
-  handle.subscribe<TYPENAME>(TOPICNAME, 1,                                     \
-    CALLBACK(TYPENAME,                                                         \
+  #define CONNECT(SLOTNAME, TOPICNAME)                                         \
+  handle.subscribe<SLOTNAME::message_type>(TOPICNAME, 1,                       \
+    CALLBACK(SLOTNAME::message_type,                                           \
     {                                                                          \
-      static_cast<TYPENAME::ConstPtr&>(current_environment) = message;         \
+      static_cast<SLOTNAME&>(current_environment) = message;             \
                                                                                \
       return publish(                                                          \
                actuate(                                                        \
@@ -192,9 +214,10 @@ int main(int argc, char** argv)
   )
 
   std::vector<ros::Subscriber> sensory {
-    CONNECT(nav_msgs::Odometry,           "/odom")
-  , CONNECT(lgsvl_msgs::Detection3DArray, "/simulator/ground_truth/3d_detections")
-  , CONNECT(sensor_msgs::Joy,             "/joy")
+    CONNECT(goal_slot, "/move_base_simple/goal"),
+    CONNECT(joy_slot, "/joy"),
+    CONNECT(odometry_slot, "/odom"),
+    CONNECT(predict_slot, "/predict_pose"),
   };
 
   ros::spin();
