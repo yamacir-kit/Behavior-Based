@@ -53,7 +53,7 @@ execute_process(
 project(${PACKAGE_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE "-g -O3 -mtune=native -march=native -DNDEBUG")
 set(CMAKE_CXX_STANDARD 14)
