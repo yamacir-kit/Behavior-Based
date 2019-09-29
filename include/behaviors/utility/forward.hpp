@@ -16,12 +16,12 @@ namespace behaviors { namespace utility
   #define FORWARD_CAPTURE(...) forward_capture(FORWARD(__VA_ARGS__))
 
   template <typename... Ts>
-  constexpr decltype(auto) forward_captures(Ts&&... xs)
+  constexpr decltype(auto) forward_variadic_capture(Ts&&... xs)
   {
     return std::make_tuple(FORWARD_CAPTURE(xs)...);
   }
 
-  #define FORWARD_CAPTURES(...) forward_captures(FORWARD(__VA_ARGS__)...)
+  #define FORWARD_VARIADIC_CAPTURE(...) forward_variadic_capture(FORWARD(__VA_ARGS__)...)
 
   template <typename T>
   constexpr decltype(auto) captured(T&& x)
