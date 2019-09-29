@@ -22,6 +22,8 @@ namespace behaviors { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
+    PRINT_VALUE(message->axes[1]);
+    PRINT_VALUE(message->axes[2]);
     return {message->axes[1], message->axes[2]};
   })
 

@@ -48,16 +48,19 @@ namespace behaviors { namespace actuator
 
       autoware_msgs::VehicleCmd command {};
 
-      // command.gear = (desired_velocity.x() < 0 ? 64 : 1);
+      // command.gear = (std::cos(angle) < 0 ? 2 : 1);
+      PRINT_VALUE(command.gear);
 
       command.twist_cmd.twist.linear.x
-        = desired_velocity.norm(); // * std::max(std::cos(angle), 0.0);
+        = desired_velocity.norm()
+          // * std::max(std::cos(angle), 0.0)
+          * std::cos(angle)
+          ;
       PRINT_VALUE(command.twist_cmd.twist.linear.x);
 
       command.twist_cmd.twist.angular.z
         = boost::math::sign(desired_velocity[1])
-          * angle
-          * (angular_velocity_max / boost::math::constants::pi<double>());
+          * (angle * angular_velocity_max / boost::math::constants::pi<double>());
       PRINT_VALUE(command.twist_cmd.twist.angular.z);
 
       command.twist_cmd.header.stamp = ros::Time::now();

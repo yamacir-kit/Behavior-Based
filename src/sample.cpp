@@ -125,9 +125,12 @@ int main(int argc, char** argv)
   auto publish {expression::dispatch(
     [&](const autoware_msgs::VehicleCmd& data)
     {
-      std::cerr << "; publish\t; " << "autoware_msgs::VehicleCmd" << std::endl;
-      // std::cerr << ";\t\t; " <<
+      std::cerr << "\n"
+                << "; publisher\t; autoware_msgs::VehicleCmd" << std::endl;
       static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
+      PRINT_VALUE(data.twist_cmd.header.stamp);
+      PRINT_VALUE(data.twist_cmd.twist.linear.x);
+      PRINT_VALUE(data.twist_cmd.twist.angular.z);
       return publisher.publish(data);
     }
   )};
@@ -146,7 +149,15 @@ int main(int argc, char** argv)
    */
   auto prioritized_acceleration_allocation = [&]()
   {
-    auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
+    std::cerr << "\n"
+              << "; " << std::string(78, '-') << "\n"
+              << ";   Prioritized Acceleration Allocation" << "\n"
+              << "; " << std::string(78, '-') << std::endl;
+
+    std::size_t depth {0};
+
+    auto allocate = [&](const auto& a, const auto& b) mutable
+      -> Eigen::Vector2d
     {
       auto importance_of = [&](const auto& v)
       {
