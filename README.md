@@ -1,4 +1,4 @@
-# Behaviors C++ Library 0.0.85
+# Behaviors C++ Library 0.0.87
 
 The behavior-based robotics library for ROS mobiligence.
 

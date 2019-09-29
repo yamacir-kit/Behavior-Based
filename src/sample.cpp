@@ -122,6 +122,8 @@ int main(int argc, char** argv)
   auto publish {expression::dispatch(
     [&](const autoware_msgs::VehicleCmd& data)
     {
+      std::cerr << "; publish\t; " << "autoware_msgs::VehicleCmd" << std::endl;
+      // std::cerr << ";\t\t; " <<
       static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
       return publisher.publish(data);
     }

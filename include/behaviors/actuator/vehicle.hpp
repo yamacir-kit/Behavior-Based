@@ -8,8 +8,10 @@
 #include <autoware_msgs/VehicleCmd.h>
 
 #include <behaviors/geometry/angle.hpp>
-#include <behaviors/semantics/extractor.hpp>
 #include <behaviors/semantics/current_velocity.hpp>
+#include <behaviors/semantics/extractor.hpp>
+#include <behaviors/utility/demangle.hpp>
+#include <behaviors/utility/print.hpp>
 
 namespace behaviors { namespace actuator
 {
@@ -30,9 +32,12 @@ namespace behaviors { namespace actuator
     template <typename Environment>
     auto operator()(const vector_type& steering, const Environment& environment) const
     {
+      std::cerr << "; vehicle\t; specialized for " << utility::demangle(typeid(CurrentVelocity)) << std::endl;
+
       const auto current_velocity {
         semantics::extract<CurrentVelocity>().from(environment)
       };
+      PRINT_VECTOR2D(current_velocity);
 
       const auto desired_velocity {current_velocity + steering};
 
