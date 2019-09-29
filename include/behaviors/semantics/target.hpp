@@ -7,6 +7,8 @@
 #include <sensor_msgs/Joy.h>
 
 #include <behaviors/semantics/define.hpp>
+#include <behaviors/utility/demangle.hpp>
+#include <behaviors/utility/print.hpp>
 
 namespace behaviors { namespace semantics
 {
@@ -20,6 +22,8 @@ namespace behaviors { namespace semantics
 
   DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(target, sensor_msgs::Joy,
   {
+    PRINT_VALUE(message->axes[1]);
+    PRINT_VALUE(message->axes[2]);
     return {message->axes[1], message->axes[2]};
   })
 

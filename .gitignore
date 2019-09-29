@@ -1,4 +1,4 @@
 docs
 doxyfile
-include/behavior_based/configure.hpp
+include/behaviors/configure.hpp
 

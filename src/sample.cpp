@@ -84,11 +84,11 @@ int main(int argc, char** argv)
   //       semantics::forward<Eigen::Vector2d>
   //     >;
 
-  using avoidance
-    = behavior::flee<
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::target<lgsvl_msgs::Detection3DArray>
-      >;
+  // using avoidance
+  //   = behavior::flee<
+  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::target<lgsvl_msgs::Detection3DArray>
+  //     >;
 
   // using nop
   //   = behavior::seek<
@@ -104,7 +104,10 @@ int main(int argc, char** argv)
    * into one output by higher order function `expression::fold`, and then
    * publish (publisher dispatched by output type).
    */
-  expression::list<slave, avoidance> behaviors {};
+  expression::list<
+    slave
+  // , avoidance
+  > behaviors {};
 
   /**
    * Message publisher dispatcher.
@@ -122,7 +125,12 @@ int main(int argc, char** argv)
   auto publish {expression::dispatch(
     [&](const autoware_msgs::VehicleCmd& data)
     {
+      std::cerr << "\n"
+                << "; publisher\t; autoware_msgs::VehicleCmd" << std::endl;
       static auto publisher {handle.advertise<autoware_msgs::VehicleCmd>("/vehicle_cmd", 1)};
+      PRINT_VALUE(data.twist_cmd.header.stamp);
+      PRINT_VALUE(data.twist_cmd.twist.linear.x);
+      PRINT_VALUE(data.twist_cmd.twist.angular.z);
       return publisher.publish(data);
     }
   )};
@@ -141,14 +149,22 @@ int main(int argc, char** argv)
    */
   auto prioritized_acceleration_allocation = [&]()
   {
-    auto allocate = [&](const auto& a, const auto& b) -> Eigen::Vector2d
+    std::cerr << "\n"
+              << "; " << std::string(78, '-') << "\n"
+              << ";   Prioritized Acceleration Allocation" << "\n"
+              << "; " << std::string(78, '-') << std::endl;
+
+    std::size_t depth {0};
+
+    auto allocate = [&](const auto& a, const auto& b) mutable
+      -> Eigen::Vector2d
     {
-      auto strategic_importance = [&](const auto& v)
+      auto importance_of = [&](const auto& v)
       {
         return geometry::angle(Eigen::Vector2d::UnitX(), v) / boost::math::constants::pi<double>();
       };
 
-      return a + (1.0 - strategic_importance(a)) * b(current_environment);
+      return a + (1.0 - importance_of(a)) * b(current_environment);
     };
 
     return expression::fold_left(behaviors, Eigen::Vector2d::Zero(), allocate);
