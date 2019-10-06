@@ -48,10 +48,10 @@ struct NAME                                                                    \
   }                                                                            \
 }
 
-DEFINE_SLOT(geometry_msgs::PoseStamped, goal_slot);
-DEFINE_SLOT(geometry_msgs::PoseStamped, predict_slot);
-DEFINE_SLOT(nav_msgs::Odometry, odometry_slot);
-DEFINE_SLOT(sensor_msgs::Joy, joy_slot);
+DEFINE_SLOT(geometry_msgs::PoseStamped, goal);
+DEFINE_SLOT(geometry_msgs::PoseStamped, ndt);
+DEFINE_SLOT(nav_msgs::Odometry, odometry);
+DEFINE_SLOT(sensor_msgs::Joy, joy);
 
 int main(int argc, char** argv)
 {
@@ -88,18 +88,18 @@ int main(int argc, char** argv)
    */
   using environment
     = expression::list<
-        goal_slot,
-        joy_slot,
-        odometry_slot,
-        predict_slot
+        goal,
+        joy,
+        odometry,
+        ndt
       >;
 
   environment current_environment {};
 
   using slave
     = behavior::seek<
-        semantics::current_velocity<nav_msgs::Odometry>,
-        semantics::target<sensor_msgs::Joy>
+        semantics::current_velocity<odometry::message_type>,
+        semantics::target<joy::message_type>
       >;
 
   // using forward
@@ -221,10 +221,10 @@ int main(int argc, char** argv)
   )
 
   std::vector<ros::Subscriber> sensory {
-    CONNECT(goal_slot, "/move_base_simple/goal"),
-    CONNECT(joy_slot, "/joy"),
-    CONNECT(odometry_slot, "/odom"),
-    CONNECT(predict_slot, "/predict_pose"),
+    CONNECT(goal, "/move_base_simple/goal"),
+    CONNECT(joy, "/joy"),
+    CONNECT(ndt, "/ndt_pose"),
+    CONNECT(odometry, "/odom"),
   };
 
   ros::spin();
