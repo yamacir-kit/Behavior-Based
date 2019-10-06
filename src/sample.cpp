@@ -202,7 +202,7 @@ int main(int argc, char** argv)
   handle.subscribe<SLOTNAME::message_type>(TOPICNAME, 1,                       \
     CALLBACK(SLOTNAME::message_type,                                           \
     {                                                                          \
-      static_cast<SLOTNAME&>(current_environment) = message;             \
+      static_cast<SLOTNAME&>(current_environment) = message;                   \
                                                                                \
       return publish(                                                          \
                actuate(                                                        \

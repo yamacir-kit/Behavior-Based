@@ -16,7 +16,7 @@ std::cerr << ";\t\t; invoked default value!\n"                                 \
           << ";\t\t;   (2) called explicitly (in many cases, meaning no action is required)\n" \
           << std::flush;
 #else // NDEBUG
-#define PRINT_SEMANTICS_CATEGORY_MESSAGE(...)
+#define PRINT_SEMANTICS_CATEGORY_INFORMATION(...)
 #endif // NDEBUG
 
 #define DEFINE_SEMANTICS_CATEGORY(CATEGORY, DEFAULT_VECTOR)                    \
