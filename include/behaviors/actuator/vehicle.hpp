@@ -48,7 +48,7 @@ namespace behaviors { namespace actuator
 
       autoware_msgs::VehicleCmd command {};
 
-      // command.gear = (std::cos(angle) < 0 ? 2 : 1);
+      // command.gear = (std::cos(angle) < 0);
       PRINT_VALUE(command.gear);
 
       command.twist_cmd.twist.linear.x
@@ -56,6 +56,7 @@ namespace behaviors { namespace actuator
           // * std::max(std::cos(angle), 0.0)
           * std::cos(angle)
           ;
+      PRINT_VALUE(desired_velocity.norm());
       PRINT_VALUE(command.twist_cmd.twist.linear.x);
 
       command.twist_cmd.twist.angular.z

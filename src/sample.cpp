@@ -202,7 +202,14 @@ int main(int argc, char** argv)
   handle.subscribe<SLOTNAME::message_type>(TOPICNAME, 1,                       \
     CALLBACK(SLOTNAME::message_type,                                           \
     {                                                                          \
+      std::cerr << "\n"                                                        \
+                << "; " << std::string(78, '-') << "\n"                        \
+                << ";   Update Environment" << "\n"                            \
+                << "; " << std::string(78, '-') << "\n"                        \
+                << "; slot\t\t; " << #SLOTNAME << std::endl;                   \
+                                                                               \
       static_cast<SLOTNAME&>(current_environment) = message;                   \
+      std::cerr << "; message\t; " << #TOPICNAME << std::endl;                 \
                                                                                \
       return publish(                                                          \
                actuate(                                                        \
