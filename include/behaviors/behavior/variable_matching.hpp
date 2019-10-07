@@ -6,40 +6,40 @@
 
 namespace behaviors { namespace behavior
 {
-  #define CURRENT_VELOCITY semantics::extract< CurrentVelocity >().from(environment)
-  #define TARGET           semantics::extract< Target          >().from(environment)
+  #define CURRENT semantics::extract<Current>().from(environment)
+  #define TARGET semantics::extract<Target>().from(environment)
 
-  #define VELOCITY_MAX     semantics::current_velocity_traits<CurrentVelocity>::linear_max
+  #define VARIABLE_MAX semantics::current_velocity_traits<Current>::linear_max
 
-  template <typename CurrentVelocity, typename Target>
+  template <typename Current, typename Target>
   struct seek
   {
     using vector_type
-      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+      = typename semantics::current_velocity_traits<Current>::vector_type;
 
     template <typename Environment>
     vector_type operator()(const Environment& environment) const
     {
-      return TARGET.normalized() * VELOCITY_MAX - CURRENT_VELOCITY;
+      return TARGET.normalized() * VARIABLE_MAX - CURRENT;
     }
   };
 
-  template <typename CurrentVelocity, typename Target>
+  template <typename Current, typename Target>
   struct flee
   {
     using vector_type
-      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+      = typename semantics::current_velocity_traits<Current>::vector_type;
 
     template <typename Environment>
     vector_type operator()(const Environment& environment) const
     {
-      return  CURRENT_VELOCITY - TARGET.normalized() * VELOCITY_MAX;
+      return  CURRENT - TARGET.normalized() * VARIABLE_MAX;
     }
   };
 
-  #undef CURRENT_VELOCITY
+  #undef CURRENT
   #undef TARGET
-  #undef VELOCITY_MAX
+  #undef VARIABLE_MAX
 }} // namespace behaviors::behavior
 
 #endif // INCLUDED_BEHAVIORS_BEHAVIOR_SEEK_HPP
