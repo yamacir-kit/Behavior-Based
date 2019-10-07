@@ -19,7 +19,7 @@
 #include <behaviors/expression/fold.hpp>
 #include <behaviors/expression/list.hpp>
 #include <behaviors/geometry/angle.hpp>
-#include <behaviors/semantics/current_velocity.hpp>
+#include <behaviors/semantics/velocity.hpp>
 #include <behaviors/semantics/forward.hpp>
 #include <behaviors/semantics/target.hpp>
 
@@ -98,25 +98,25 @@ int main(int argc, char** argv)
 
   using slave
     = behavior::seek<
-        semantics::current_velocity<odometry::message_type>,
+        semantics::velocity<odometry::message_type>,
         semantics::target<joy::message_type>
       >;
 
   // using forward
   //   = behavior::seek<
-  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::velocity<nav_msgs::Odometry>,
   //       semantics::forward<Eigen::Vector2d>
   //     >;
 
   // using avoidance
   //   = behavior::flee<
-  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::velocity<nav_msgs::Odometry>,
   //       semantics::target<lgsvl_msgs::Detection3DArray>
   //     >;
 
   // using nop
   //   = behavior::seek<
-  //       semantics::current_velocity<nav_msgs::Odometry>,
+  //       semantics::velocity<nav_msgs::Odometry>,
   //       semantics::target<expression::unit>
   //     >;
 
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
   )};
 
   actuator::vehicle<
-    semantics::current_velocity<nav_msgs::Odometry>
+    semantics::velocity<nav_msgs::Odometry>
   > actuate {};
 
   /**

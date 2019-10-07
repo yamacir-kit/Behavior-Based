@@ -2,20 +2,20 @@
 #define INCLUDED_BEHAVIORS_BEHAVIOR_SEEK_HPP
 
 #include <behaviors/semantics/extractor.hpp>
-#include <behaviors/semantics/current_velocity.hpp>
+#include <behaviors/semantics/velocity.hpp>
 
 namespace behaviors { namespace behavior
 {
   #define CURRENT semantics::extract<Current>().from(environment)
   #define TARGET semantics::extract<Target>().from(environment)
 
-  #define VARIABLE_MAX semantics::current_velocity_traits<Current>::linear_max
+  #define VARIABLE_MAX semantics::velocity_traits<Current>::linear_max
 
   template <typename Current, typename Target>
   struct seek
   {
     using vector_type
-      = typename semantics::current_velocity_traits<Current>::vector_type;
+      = typename semantics::velocity_traits<Current>::vector_type;
 
     template <typename Environment>
     vector_type operator()(const Environment& environment) const
@@ -28,7 +28,7 @@ namespace behaviors { namespace behavior
   struct flee
   {
     using vector_type
-      = typename semantics::current_velocity_traits<Current>::vector_type;
+      = typename semantics::velocity_traits<Current>::vector_type;
 
     template <typename Environment>
     vector_type operator()(const Environment& environment) const

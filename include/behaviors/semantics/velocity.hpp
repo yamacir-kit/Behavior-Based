@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
-#define INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
+#ifndef INCLUDED_BEHAVIORS_SEMANTICS_VELOCITY_HPP
+#define INCLUDED_BEHAVIORS_SEMANTICS_VELOCITY_HPP
 
 #include <cmath>
 
@@ -17,10 +17,10 @@
 
 namespace behaviors { namespace semantics
 {
-  DEFINE_SEMANTICS_CATEGORY(current_velocity, vector_type::Zero());
+  DEFINE_SEMANTICS_CATEGORY(velocity, vector_type::Zero());
 
   template <typename CurrentVelocity>
-  struct current_velocity_traits
+  struct velocity_traits
   {
     using vector_type
       = typename CurrentVelocity::vector_type;
@@ -31,7 +31,7 @@ namespace behaviors { namespace semantics
     static constexpr auto angular_max {+boost::math::constants::pi<double>()}; // [rad/s]
   };
 
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::Twist,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::Twist,
   {
     return vector_type {
       std::cos(message->angular.z),
@@ -39,7 +39,7 @@ namespace behaviors { namespace semantics
     } * message->linear.x;
   })
 
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, geometry_msgs::TwistStamped,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, geometry_msgs::TwistStamped,
   {
     return vector_type {
       std::cos(message->twist.angular.z),
@@ -47,7 +47,7 @@ namespace behaviors { namespace semantics
     } * message->twist.linear.x;
   })
 
-  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(current_velocity, nav_msgs::Odometry,
+  DEFINE_SEMANTICS_CATEGORY_SPECIALIZATION(velocity, nav_msgs::Odometry,
   {
     return vector_type {
       std::cos(message->twist.twist.angular.z),
@@ -56,5 +56,5 @@ namespace behaviors { namespace semantics
   })
 }} // namespace behaviors::semantics
 
-#endif // INCLUDED_BEHAVIORS_SEMANTICS_CURRENT_VELOCITY_HPP
+#endif // INCLUDED_BEHAVIORS_SEMANTICS_VELOCITY_HPP
 

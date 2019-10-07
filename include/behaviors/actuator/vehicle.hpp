@@ -8,8 +8,8 @@
 #include <autoware_msgs/VehicleCmd.h>
 
 #include <behaviors/geometry/angle.hpp>
-#include <behaviors/semantics/current_velocity.hpp>
 #include <behaviors/semantics/extractor.hpp>
+#include <behaviors/semantics/velocity.hpp>
 #include <behaviors/utility/demangle.hpp>
 #include <behaviors/utility/print.hpp>
 
@@ -22,10 +22,10 @@ namespace behaviors { namespace actuator
   struct vehicle<CurrentVelocity>
   {
     using vector_type
-      = typename semantics::current_velocity_traits<CurrentVelocity>::vector_type;
+      = typename semantics::velocity_traits<CurrentVelocity>::vector_type;
 
     static constexpr auto angular_velocity_max {
-      semantics::current_velocity_traits<CurrentVelocity>::angular_max
+      semantics::velocity_traits<CurrentVelocity>::angular_max
     };
 
     // XXX CurrentVelocity unneeded?
@@ -35,12 +35,12 @@ namespace behaviors { namespace actuator
       std::cerr << ";\n"
                 << "; vehicle\t; specialized for " << utility::demangle(typeid(CurrentVelocity)) << std::endl;
 
-      const auto current_velocity {
+      const auto velocity {
         semantics::extract<CurrentVelocity>().from(environment)
       };
-      PRINT_VECTOR2D(current_velocity);
+      PRINT_VECTOR2D(velocity);
 
-      const auto desired_velocity {current_velocity + steering};
+      const auto desired_velocity {velocity + steering};
       PRINT_VECTOR2D(desired_velocity);
 
       const auto angle {geometry::angle(Eigen::Vector2d::UnitX(), desired_velocity)};
