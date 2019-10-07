@@ -8,7 +8,7 @@
 #include <sensor_msgs/Joy.h>
 // #include <lgsvl_msgs/Detection3DArray.h>
 
-#include <behaviors/semantics/define.hpp>
+#include <behaviors/semantics/preamble.hpp>
 #include <behaviors/utility/demangle.hpp>
 #include <behaviors/utility/print.hpp>
 

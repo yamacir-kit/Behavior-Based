@@ -12,8 +12,8 @@
 #include <geometry_msgs/TwistStamped.h>
 
 #include <behaviors/expression/list.hpp>
-#include <behaviors/semantics/define.hpp>
 #include <behaviors/semantics/facade.hpp>
+#include <behaviors/semantics/preamble.hpp>
 
 namespace behaviors { namespace semantics
 {
